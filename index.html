@@ -557,6 +557,53 @@
       box-shadow: 0 3px 14px rgba(221,42,123,0.35);
     }
 
+    /* ── MASCOT ── */
+    .hero-mascot {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin: 0 auto 2.5rem;
+      flex-shrink: 0;
+    }
+
+    .hero-mascot::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      background: var(--cream);
+      border: 3px solid rgba(200,160,32,0.5);
+      box-shadow:
+        0 0 0 8px rgba(200,160,32,0.08),
+        0 0 80px rgba(200,160,32,0.25),
+        0 0 40px rgba(30,92,30,0.4);
+    }
+
+    .hero-mascot img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 50%;
+      animation: mascot-float 3.2s ease-in-out infinite;
+    }
+
+    @keyframes mascot-float {
+      0%, 100% { transform: translateY(0) rotate(-1deg); }
+      50%       { transform: translateY(-14px) rotate(1deg); }
+    }
+
+    .nav-mascot {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--cream);
+      object-fit: contain;
+      border: 2px solid rgba(200,160,32,0.5);
+      flex-shrink: 0;
+    }
+
     /* ── SCROLL REVEAL ── */
     .reveal {
       opacity: 0;
@@ -579,6 +626,7 @@
       .nav-badge { font-size: 0.62rem; padding: 0.28rem 0.65rem; }
 
       .hero { padding: 4rem 1.25rem 3rem; min-height: 85vh; }
+      .hero-mascot { width: 240px; height: 240px; margin-bottom: 2rem; }
       .hero-label { font-size: 0.62rem; letter-spacing: 2px; padding: 0.35rem 0.9rem; margin-bottom: 1.25rem; }
       .hero-soon { letter-spacing: 3px; margin-bottom: 0.75rem; }
       .hero-brand { letter-spacing: 5px; -webkit-text-stroke: 1px rgba(200,160,32,0.5); margin-bottom: 1.5rem; }
@@ -616,6 +664,7 @@
       .nav-badge { display: none; }
 
       .hero { padding: 3.5rem 1rem 2.5rem; }
+      .hero-mascot { width: 190px; height: 190px; margin-bottom: 1.5rem; }
       .hero-label { letter-spacing: 1.5px; }
       .hero-soon { letter-spacing: 2px; }
       .hero-brand { letter-spacing: 3px; -webkit-text-stroke: 1px rgba(200,160,32,0.4); }
@@ -651,7 +700,10 @@
   </a>
 
   <nav>
-    <div class="nav-logo">COQUEROS</div>
+    <div style="display:flex;align-items:center;gap:0.6rem;">
+      <img src="coquito.jpeg" alt="Coquito" class="nav-mascot" />
+      <div class="nav-logo">COQUEROS</div>
+    </div>
     <div class="nav-badge">B2B &amp; Mayoreo</div>
   </nav>
 
@@ -661,6 +713,11 @@
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <div class="hero-label">Caracas, Venezuela · Próximamente</div>
+
+      <div class="hero-mascot">
+        <img src="coquito.jpeg" alt="Coquito, mascota de Coqueros" />
+      </div>
+
       <div class="hero-soon">PRÓXIMAMENTE<br /><span>ONLINE</span></div>
       <div class="hero-brand">COQUEROS</div>
       <p class="hero-sub">
