@@ -46,6 +46,14 @@ app/
       import-wrapper.tsx
     pipeline/page.tsx    # kanban
     ruta/page.tsx        # ruta del día
+    ventas/page.tsx      # calendario mensual (query params: ?anio&mes)
+    productos/
+      page.tsx           # catálogo agrupado por producto
+      nuevo/page.tsx
+      [id]/page.tsx      # ficha con receta y bitácora
+      ingredientes/page.tsx
+      proveedores/page.tsx
+    publicidad/page.tsx  # galería con filtros
 
 components/crm/
   sidebar.tsx            # nav lateral
@@ -57,19 +65,34 @@ components/crm/
   badge.tsx (StageBadge, TipoBadge)
   excel-buttons.tsx (ExportButton)
   import-help.tsx
-  scroll-reveal.tsx      # también usado en landing
+  scroll-reveal.tsx              # también usado en landing
+  producto-form.tsx
+  receta-panel.tsx               # ingredientes por producto con cálculo de costo
+  bitacora-panel.tsx             # notas cronológicas por producto
+  ingredientes-table.tsx
+  proveedores-table.tsx
+  ventas-calendario.tsx          # grid de días 7x6 con click-para-abrir-panel
+  venta-form-modal.tsx           # modal con líneas producto + auto-costo
+  publicidad-galeria.tsx         # grid + upload modal + preview modal
 
 lib/
   supabase/client.ts     # createBrowserClient (usa NEXT_PUBLIC_*)
   supabase/server.ts     # createServerClient con cookies
   actions/aliados.ts     # server actions
   actions/ruta.ts
+  actions/productos.ts   # productos, ingredientes, proveedores, receta, notas
+  actions/ventas.ts      # createVenta (transacción con items), deleteVenta
+  actions/publicidad.ts  # createPublicidad, deletePublicidad
   types.ts               # tipos TypeScript de las entidades
 
 middleware.ts            # protege /crm/*, redirige a /crm/login
 supabase/
   config.toml
-  migrations/001_initial_schema.sql
+  migrations/
+    001_initial_schema.sql       # aliados, contactos, interacciones, pipeline, productos base
+    002_productos_extended.sql   # proveedores, ingredientes, producto_ingredientes, producto_notas
+    003_ventas.sql               # ventas + venta_items con trigger de recalcular totales
+    004_publicidad.sql           # publicidad + bucket 'publicidad' en Storage
 ```
 
 ---
@@ -110,7 +133,10 @@ Todo esto vive en memoria persistente pero listado aquí también porque es crí
 - Repo GitHub: https://github.com/impresorastoncan-png/coqueros.ve
 - Proyecto Supabase: ref `fglmssqpkdljvmdwgwwn`. Dashboard: https://supabase.com/dashboard/project/fglmssqpkdljvmdwgwwn
 - Credenciales locales en `supabase keys.txt` (gitignored, NUNCA commit).
-- Migraciones en `supabase/migrations/`. Aplicar con `npm run db:push` (requiere Supabase CLI autenticado).
+- Access token para CLI/API en `supabase keys.txt` (línea `access:`). Exportar como `SUPABASE_ACCESS_TOKEN` para operar.
+- Migraciones en `supabase/migrations/`. Aplicar con `SUPABASE_ACCESS_TOKEN=... npx supabase db push` (link previo: `npx supabase link --project-ref fglmssqpkdljvmdwgwwn`).
+- **Bucket de Storage**: `publicidad` (público, 50 MB por archivo). Mimes permitidos: png/jpeg/gif/webp/svg, mp4/quicktime, pdf. Creado en migración 004.
+- URLs públicas del bucket: `${NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/publicidad/<storage_path>`. La página `/crm/publicidad` calcula esto server-side.
 
 ---
 
@@ -119,13 +145,20 @@ Todo esto vive en memoria persistente pero listado aquí también porque es crí
 - [x] **Fase 0** — Andamiaje, Supabase, auth, layout, brand theme, migraciones iniciales
 - [x] **Fase 1** — Aliados (CRUD + tabla + kanban), contactos, interacciones, import/export Excel
 - [x] **Fase 2** — Ruta con mapa Leaflet, visitas del día, marcar visitado
-- [ ] **Fase 3** — Pedidos, consignación, liquidación (tablas esbozadas, sin UI)
+- [ ] **Fase 3** — Pedidos, consignación, liquidación (tablas esbozadas, sin UI). El módulo de Ventas simplificado cubre parcialmente lo esperado.
 - [ ] **Fase 4** — Tablero gerencial con márgenes, exportable
 
-**Añadidos fuera del master prompt (en planificación con el dueño 2026-08-05):**
-- [ ] **Módulo Productos extendido** — receta (ingredientes+proveedores) y bitácora de producción por SKU
-- [ ] **Módulo Ventas** — calendario mensual con múltiples ventas por día, costo auto-calculado del catálogo, totales del mes
-- [ ] **Módulo Publicidad** — banco de assets (flyers, posts, gráficos) con Supabase Storage
+**Añadidos fuera del master prompt (2026-08-05):**
+- [x] **Módulo Productos extendido** — recetas con ingredientes+proveedores, cálculo de costo estimado por unidad, bitácora de producción por SKU (tabs Datos/Precios + Receta + Bitácora). Sub-vistas para catálogo de ingredientes y proveedores.
+- [x] **Módulo Ventas** — calendario mensual (grid 7×6 con navegación mes anterior/siguiente/hoy). Click en día → panel con ventas del día + botón nueva venta. Modal con líneas por producto (auto-fill precio y costo desde catálogo), método de pago, aliado opcional. Totales del mes en sidebar (monto, costo, ganancia, ticket promedio).
+- [x] **Módulo Publicidad** — banco de assets con Supabase Storage (bucket público `publicidad`, 50 MB máx, imágenes/video/PDF). Galería con filtros por tipo/plataforma/búsqueda, upload modal (archivo o URL externa), preview modal con descarga.
+
+**Pendiente / futuro:**
+- [ ] Roles diferenciados en RLS (admin / vendedor / motorizado) — hoy `authenticated USING (true)` sin discriminar.
+- [ ] Export Excel del módulo Ventas (analogía con Aliados).
+- [ ] Import Excel de ventas históricas para bootstrap.
+- [ ] Módulos originales de Fase 3 completos (pedidos + consignación + liquidación) si el negocio los necesita más allá de Ventas simple.
+- [ ] Tablero gerencial de Fase 4 alimentado por `ventas`.
 
 ---
 
