@@ -2,6 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import AliadoForm from '@/components/crm/aliado-form'
 
+export const dynamic = 'force-dynamic'
+
 export default async function NuevoAliadoPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
