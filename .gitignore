@@ -29,3 +29,6 @@ supabase keys.txt
 
 # Claude Code local settings
 .claude/
+
+.vercel
+.env*
