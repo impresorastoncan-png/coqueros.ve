@@ -80,7 +80,7 @@ export default async function ProductosPage() {
                     <td className="px-4 py-2.5 text-right text-[#C0D1C6]">{fmt(p.precio_aliado)}</td>
                     <td className="px-4 py-2.5 text-right text-[#C0D1C6]">{fmt(p.precio_mayor)}</td>
                     <td className="px-4 py-2.5 text-right text-[#FDC829] font-semibold">{fmt(p.precio_final)}</td>
-                    <td className="px-4 py-2.5 text-right text-[#6FB04A] font-semibold">{fmt(p.ganancia)}</td>
+                    <td className="px-4 py-2.5 text-right text-[#6FB04A] font-semibold">{fmt(gananciaCalc(p.precio_final, p.costo))}</td>
                     <td className="px-4 py-2.5 text-right">
                       <Link href={`/crm/productos/${p.id}`} className="text-xs text-[#6FB04A] hover:underline">
                         Ficha →
@@ -100,4 +100,9 @@ export default async function ProductosPage() {
 function fmt(n: number | null) {
   if (n == null) return <span className="text-[#6E3F22]">—</span>
   return `$${n.toFixed(2)}`
+}
+
+function gananciaCalc(precioFinal: number | null, costo: number | null): number | null {
+  if (precioFinal == null || costo == null) return null
+  return Number(precioFinal) - Number(costo)
 }
