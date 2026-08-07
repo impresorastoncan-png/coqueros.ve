@@ -17,11 +17,17 @@ export default async function AliadoDetailPage({ params }: { params: Promise<{ i
   const [
     { data: aliado },
     { data: stages },
+    { data: productos },
     { data: contactos },
     { data: interacciones },
   ] = await Promise.all([
-    supabase.from('aliados').select('*, pipeline_stage:pipeline_stages(id, nombre, color)').eq('id', id).single(),
+    supabase
+      .from('aliados')
+      .select('*, pipeline_stage:pipeline_stages(id, nombre, color), producto_principal:productos(id, nombre, presentacion)')
+      .eq('id', id)
+      .single(),
     supabase.from('pipeline_stages').select('*').order('orden'),
+    supabase.from('productos').select('*').eq('activo', true).order('nombre').order('presentacion'),
     supabase.from('contactos').select('*').eq('aliado_id', id).order('es_principal', { ascending: false }),
     supabase.from('interacciones').select('*').eq('aliado_id', id).order('fecha', { ascending: false }),
   ])
@@ -52,6 +58,11 @@ export default async function AliadoDetailPage({ params }: { params: Promise<{ i
             {aliado.pipeline_stage && <StageBadge nombre={aliado.pipeline_stage.nombre} color={aliado.pipeline_stage.color} />}
             {aliado.zona && <span className="text-xs text-[#C0D1C6]">📍 {aliado.zona}</span>}
             {aliado.direccion && <span className="text-xs text-[#6E3F22]">{aliado.direccion}</span>}
+            {aliado.pipeline_stage?.nombre === 'Activo' && aliado.producto_principal && (
+              <span className="text-xs bg-[#6FB04A]/15 text-[#6FB04A] border border-[#6FB04A]/30 px-2 py-0.5 rounded">
+                🥥 {aliado.producto_principal.nombre} · {aliado.producto_principal.presentacion}
+              </span>
+            )}
           </div>
         </div>
         <Link
@@ -78,7 +89,7 @@ export default async function AliadoDetailPage({ params }: { params: Promise<{ i
         <div className="xl:col-span-2 space-y-6">
           <div className="bg-[#2a1a0e] border border-[#6E3F22]/40 rounded-lg p-5">
             <h2 className="font-bebas text-lg tracking-widest text-[#F5F5DC] mb-4">DATOS DEL ALIADO</h2>
-            <AliadoForm aliado={aliado as never} stages={stages ?? []} />
+            <AliadoForm aliado={aliado as never} stages={stages ?? []} productos={productos ?? []} />
           </div>
 
           {/* Stats rápidos */}

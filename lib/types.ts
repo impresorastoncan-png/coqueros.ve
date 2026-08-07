@@ -102,12 +102,14 @@ export interface Aliado {
   lat: number | null
   lng: number | null
   pipeline_stage_id: string | null
+  producto_principal_id: string | null
   tiene_nevera: boolean
   notas: string | null
   activo: boolean
   created_at: string
   updated_at: string
   pipeline_stage?: PipelineStage
+  producto_principal?: Producto | null
   contactos?: Contacto[]
 }
 

@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { crearAliado, actualizarAliado } from '@/lib/actions/aliados'
-import type { Aliado, PipelineStage } from '@/lib/types'
+import type { Aliado, PipelineStage, Producto } from '@/lib/types'
 
 const TIPOS = ['cafetería', 'restaurante', 'gimnasio', 'pilates-yoga', 'market', 'otro'] as const
 const ZONAS = ['Chacao', 'Altamira', 'La Castellana', 'Los Palos Grandes', 'Las Mercedes', 'Otra']
@@ -11,9 +11,11 @@ const ZONAS = ['Chacao', 'Altamira', 'La Castellana', 'Los Palos Grandes', 'Las 
 export default function AliadoForm({
   aliado,
   stages,
+  productos = [],
 }: {
   aliado?: Aliado
   stages: PipelineStage[]
+  productos?: Producto[]
 }) {
   const router = useRouter()
   const [pending, startTransition] = useTransition()
@@ -25,11 +27,15 @@ export default function AliadoForm({
     zona: aliado?.zona ?? '',
     direccion: aliado?.direccion ?? '',
     pipeline_stage_id: aliado?.pipeline_stage_id ?? (stages[0]?.id ?? ''),
+    producto_principal_id: aliado?.producto_principal_id ?? '',
     tiene_nevera: aliado?.tiene_nevera ?? false,
     notas: aliado?.notas ?? '',
     lat: aliado?.lat?.toString() ?? '',
     lng: aliado?.lng?.toString() ?? '',
   })
+
+  const stageActual = stages.find(s => s.id === form.pipeline_stage_id)
+  const esActivo = stageActual?.nombre === 'Activo'
 
   function set(field: string, value: unknown) {
     setForm(f => ({ ...f, [field]: value }))
@@ -44,6 +50,9 @@ export default function AliadoForm({
           ...form,
           lat: form.lat ? parseFloat(form.lat) : null,
           lng: form.lng ? parseFloat(form.lng) : null,
+          // Solo enviar producto_principal_id si estamos en etapa Activo;
+          // en otras etapas se limpia para no arrastrar valores viejos.
+          producto_principal_id: esActivo ? (form.producto_principal_id || null) : null,
         }
         if (aliado) {
           await actualizarAliado(aliado.id, payload as Parameters<typeof actualizarAliado>[1])
@@ -157,6 +166,28 @@ export default function AliadoForm({
           </label>
         </div>
       </div>
+
+      {/* Producto principal — solo si el aliado está en etapa Activo */}
+      {esActivo && (
+        <div className="bg-[#6FB04A]/5 border border-[#6FB04A]/30 rounded-md p-3">
+          <label className="block text-xs font-semibold text-[#6FB04A] uppercase tracking-wider mb-1.5">
+            Producto principal de la alianza
+            <span className="text-[#6E3F22] normal-case font-normal ml-1">(SKU insignia del aliado activo)</span>
+          </label>
+          <select
+            value={form.producto_principal_id}
+            onChange={e => set('producto_principal_id', e.target.value)}
+            className="w-full bg-[#1a1007] border border-[#6E3F22]/60 rounded-md px-3 py-2.5 text-[#F5F5DC] text-sm focus:outline-none focus:border-[#6FB04A] transition-colors"
+          >
+            <option value="">— Sin definir —</option>
+            {productos.map(p => (
+              <option key={p.id} value={p.id}>
+                {p.nombre} · {p.presentacion}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Notas */}
       <div>
