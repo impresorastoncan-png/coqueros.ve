@@ -9,7 +9,11 @@ const navItems = [
   { href: '/crm/aliados',    label: 'Aliados',    icon: '🤝' },
   { href: '/crm/pipeline',   label: 'Pipeline',   icon: '📋' },
   { href: '/crm/ruta',       label: 'Ruta',       icon: '🗺️' },
+  { href: '/crm/presencia',  label: 'Presencia',  icon: '🌎' },
   { href: '/crm/ventas',     label: 'Ventas',     icon: '💵' },
+  { href: '/crm/caja',       label: 'Caja',       icon: '💰' },
+  { href: '/crm/inventario', label: 'Inventario', icon: '📦' },
+  { href: '/crm/objetivos',  label: 'Objetivos',  icon: '🎯' },
   { href: '/crm/productos',  label: 'Productos',  icon: '🥥' },
   { href: '/crm/publicidad', label: 'Publicidad', icon: '📣' },
 ]

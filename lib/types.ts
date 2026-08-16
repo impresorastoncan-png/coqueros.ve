@@ -65,9 +65,49 @@ export interface Ingrediente {
   proveedor_id: string | null
   notas: string | null
   activo: boolean
+  stock_actual: number
+  stock_minimo: number
   created_at: string
   updated_at: string
   proveedor?: Proveedor | null
+}
+
+export interface ProductoStock {
+  id: string
+  producto_id: string
+  stock_actual: number
+  stock_minimo: number
+  updated_at: string
+  producto?: Producto
+}
+
+export interface StockAliado {
+  id: string
+  aliado_id: string
+  producto_id: string
+  cantidad: number
+  updated_at: string
+  aliado?: { id: string; nombre: string; zona: string | null }
+  producto?: Producto
+}
+
+export type AmbitoStock = 'materia-prima' | 'producto' | 'consignacion'
+export type OperacionStock = 'entrada' | 'salida' | 'ajuste' | 'venta' | 'merma' | 'traslado' | 'restock'
+
+export interface MovimientoStock {
+  id: string
+  ambito: AmbitoStock
+  operacion: OperacionStock
+  ingrediente_id: string | null
+  producto_id: string | null
+  aliado_id: string | null
+  cantidad: number
+  cantidad_antes: number | null
+  cantidad_despues: number | null
+  motivo: string | null
+  venta_id: string | null
+  autor: string | null
+  fecha: string
 }
 
 export interface ProductoIngrediente {
@@ -179,6 +219,88 @@ export interface VentaItem {
   subtotal_costo: number
   created_at: string
   producto?: Producto | null
+}
+
+export type CategoriaObjetivo = 'financiero' | 'comercial' | 'operativo' | 'personal'
+export type MetricaObjetivo =
+  | 'ganancia_mensual'
+  | 'ganancia_semanal'
+  | 'ganancia_acumulada'
+  | 'ventas_mensual'
+  | 'ventas_semanal'
+  | 'aliados_activos'
+  | 'neveras_colocadas'
+  | 'unidades_vendidas_mes'
+  | 'custom'
+export type EstadoObjetivo = 'activo' | 'cumplido' | 'pausado' | 'cancelado'
+export type PrioridadObjetivo = 'alta' | 'media' | 'baja'
+
+export interface Objetivo {
+  id: string
+  titulo: string
+  descripcion: string | null
+  categoria: CategoriaObjetivo | null
+  metrica: MetricaObjetivo
+  target_valor: number
+  target_fecha: string | null
+  valor_inicial: number
+  estado: EstadoObjetivo
+  prioridad: PrioridadObjetivo
+  icono: string | null
+  color: string | null
+  notas: string | null
+  created_at: string
+  updated_at: string
+}
+
+// ─── Caja ────────────────────────────────────────────────────────────────────
+
+export type CajaTipo = 'ingreso' | 'egreso'
+export type CajaOrigen = 'manual' | 'venta-auto'
+
+export const CATEGORIAS_INGRESO = ['venta', 'aporte-personal', 'otro-ingreso'] as const
+export const CATEGORIAS_EGRESO = [
+  'materia-prima',
+  'combustible',
+  'envases',
+  'nevera',
+  'mantenimiento',
+  'marketing',
+  'personal',
+  'retiro-personal',
+  'otro-egreso',
+] as const
+
+export type CategoriaIngreso = typeof CATEGORIAS_INGRESO[number]
+export type CategoriaEgreso = typeof CATEGORIAS_EGRESO[number]
+
+export const LABEL_CATEGORIA_CAJA: Record<CategoriaIngreso | CategoriaEgreso, string> = {
+  'venta': 'Venta',
+  'aporte-personal': 'Aporte personal',
+  'otro-ingreso': 'Otro ingreso',
+  'materia-prima': 'Materia prima',
+  'combustible': 'Combustible',
+  'envases': 'Envases',
+  'nevera': 'Nevera',
+  'mantenimiento': 'Mantenimiento',
+  'marketing': 'Marketing',
+  'personal': 'Personal / sueldos',
+  'retiro-personal': 'Retiro personal',
+  'otro-egreso': 'Otro egreso',
+}
+
+export interface CajaMovimiento {
+  id: string
+  fecha: string
+  tipo: CajaTipo
+  categoria: string
+  monto: number
+  metodo_pago: MetodoPago | null
+  descripcion: string | null
+  venta_id: string | null
+  origen: CajaOrigen
+  created_at: string
+  updated_at: string
 }
 
 export type TipoPublicidad = 'flyer' | 'post-ig' | 'post-wa' | 'story' | 'grafico' | 'video' | 'logo' | 'otro'

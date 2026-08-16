@@ -9,17 +9,29 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/crm/login')
 
+  const { data: stageActivo } = await supabase
+    .from('pipeline_stages')
+    .select('id')
+    .eq('nombre', 'Activo')
+    .maybeSingle()
+
   const [
-    { count: totalAliados },
+    { count: aliadosActivos },
+    { count: enPipeline },
     { count: conNevera },
     { data: porStage },
     { data: ultimasInteracciones },
   ] = await Promise.all([
-    supabase.from('aliados').select('*', { count: 'exact', head: true }).eq('activo', true),
+    stageActivo
+      ? supabase.from('aliados').select('*', { count: 'exact', head: true }).eq('activo', true).eq('pipeline_stage_id', stageActivo.id)
+      : Promise.resolve({ count: 0 }),
+    supabase.from('aliados').select('*', { count: 'exact', head: true }).eq('activo', true).not('pipeline_stage_id', 'is', null),
     supabase.from('aliados').select('*', { count: 'exact', head: true }).eq('tiene_nevera', true).eq('activo', true),
     supabase.from('aliados').select('pipeline_stage_id, pipeline_stages(nombre, color)').eq('activo', true),
     supabase.from('interacciones').select('*, aliados(nombre)').order('fecha', { ascending: false }).limit(5),
   ])
+
+  const totalPorStage = (porStage ?? []).length
 
   // Contar por stage
   const stageCounts: Record<string, { nombre: string; color: string | null; count: number }> = {}
@@ -42,9 +54,9 @@ export default async function DashboardPage() {
       {/* KPI cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Aliados activos',   value: totalAliados ?? 0, icon: '🤝', color: '#6FB04A', href: '/crm/aliados' },
-          { label: 'Neveras colocadas', value: conNevera ?? 0,   icon: '❄️', color: '#006994', href: '/crm/aliados?nevera=true' },
-          { label: 'En pipeline',       value: totalAliados ?? 0, icon: '📋', color: '#FDC829', href: '/crm/pipeline' },
+          { label: 'Aliados activos',   value: aliadosActivos ?? 0, icon: '🤝', color: '#6FB04A', href: '/crm/aliados' },
+          { label: 'Neveras colocadas', value: conNevera ?? 0,      icon: '❄️', color: '#006994', href: '/crm/aliados?nevera=true' },
+          { label: 'En pipeline',       value: enPipeline ?? 0,     icon: '📋', color: '#FDC829', href: '/crm/pipeline' },
           { label: 'Interacciones hoy', value: (ultimasInteracciones ?? []).filter(i => new Date(i.fecha).toDateString() === new Date().toDateString()).length, icon: '🗺️', color: '#C0D1C6', href: '/crm/aliados' },
         ].map(card => (
           <Link key={card.label} href={card.href} className="bg-[#2a1a0e] border border-[#6E3F22]/40 rounded-lg p-5 hover:border-[#6E3F22]/60 transition-colors group">
@@ -71,7 +83,7 @@ export default async function DashboardPage() {
                 <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: s.color ?? '#6FB04A' }} />
                 <span className="text-sm text-[#C0D1C6] flex-1">{s.nombre}</span>
                 <div className="flex items-center gap-2">
-                  <div className="h-1.5 rounded-full" style={{ width: `${Math.max(8, (s.count / (totalAliados || 1)) * 80)}px`, backgroundColor: s.color ?? '#6FB04A', opacity: 0.7 }} />
+                  <div className="h-1.5 rounded-full" style={{ width: `${Math.max(8, (s.count / (totalPorStage || 1)) * 80)}px`, backgroundColor: s.color ?? '#6FB04A', opacity: 0.7 }} />
                   <span className="text-sm font-bold" style={{ color: s.color ?? '#6FB04A' }}>{s.count}</span>
                 </div>
               </div>

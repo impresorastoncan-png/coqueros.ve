@@ -22,9 +22,11 @@ El documento canónico de negocio y roadmap está en `master_prompt_crm_coqueros
 - **React 19**, **TypeScript 5**
 - **Tailwind 3.4** — colores de marca hardcodeados en clases (verde `#6FB04A`, café `#6E3F22`, crema `#F5F5DC`, ámbar `#FDC829`)
 - **Supabase** (Postgres + Auth + Storage) — cliente `@supabase/ssr ^0.6.1`
-- **Leaflet + react-leaflet** — mapa de ruta
+- **Google Maps JS API** vía `@googlemaps/js-api-loader` v2 (functional `importLibrary`) — usado en `/ruta` (Directions + optimización de waypoints) y `/presencia` (círculos de calor). Nota: `HeatmapLayer` fue removido de Maps JS 3.65; `/presencia` usa `google.maps.Circle` ponderados para el efecto heatmap.
+- **Gemini API** (Google AI Studio) — para asesoría en `/objetivos`. Key en `GEMINI_API_KEY`. Modelo actual `gemini-2.5-flash`.
 - **@hello-pangea/dnd** — drag & drop del kanban del pipeline
 - **xlsx (SheetJS)** — import/export Excel
+- **Leaflet + react-leaflet** — deps residuales del mapa anterior de `/ruta`. Ya no se usan; se pueden desinstalar cuando se limpie.
 
 ---
 
@@ -47,6 +49,9 @@ app/
     pipeline/page.tsx    # kanban
     ruta/page.tsx        # ruta del día
     ventas/page.tsx      # calendario mensual (query params: ?anio&mes)
+    inventario/page.tsx  # 3 cards: materia prima, producto terminado, en clientes
+    objetivos/page.tsx   # metas del negocio con insights de Gemini
+    presencia/page.tsx   # mapa de zonas de calor de aliados
     productos/
       page.tsx           # catálogo agrupado por producto
       nuevo/page.tsx
@@ -54,6 +59,8 @@ app/
       ingredientes/page.tsx
       proveedores/page.tsx
     publicidad/page.tsx  # galería con filtros
+  api/
+    objetivos/insights/route.ts   # POST → llama Gemini con contexto de negocio
 
 components/crm/
   sidebar.tsx            # nav lateral
@@ -74,6 +81,13 @@ components/crm/
   ventas-calendario.tsx          # grid de días 7x6 con click-para-abrir-panel
   venta-form-modal.tsx           # modal con líneas producto + auto-costo
   publicidad-galeria.tsx         # grid + upload modal + preview modal
+  inventario-cliente.tsx         # 3 tabs de stock + modales ajuste/traslado/reducir
+  objetivos-cliente.tsx          # grid de objetivos + botón "Consultar IA"
+  presencia-cliente.tsx          # mapa Google + círculos ponderados por peso
+  ruta-cliente.tsx / ruta-mapa.tsx  # Google Maps + optimización de waypoints + print PDF
+
+lib/
+  google-maps.ts                 # loader singleton (functional API v2)
 
 lib/
   supabase/client.ts     # createBrowserClient (usa NEXT_PUBLIC_*)
@@ -83,6 +97,8 @@ lib/
   actions/productos.ts   # productos, ingredientes, proveedores, receta, notas
   actions/ventas.ts      # createVenta (transacción con items), deleteVenta
   actions/publicidad.ts  # createPublicidad, deletePublicidad
+  actions/inventario.ts  # ajustar stock materia/producto, traslado, reducir cliente (auto-venta)
+  actions/objetivos.ts   # CRUD + computarProgresoTodas + generarInsights (Gemini)
   types.ts               # tipos TypeScript de las entidades
 
 middleware.ts            # protege /crm/*, redirige a /crm/login
@@ -93,6 +109,10 @@ supabase/
     002_productos_extended.sql   # proveedores, ingredientes, producto_ingredientes, producto_notas
     003_ventas.sql               # ventas + venta_items con trigger de recalcular totales
     004_publicidad.sql           # publicidad + bucket 'publicidad' en Storage
+    005_aliado_producto_principal.sql  # producto_principal_id en aliados
+    006_coquitos_de_hielo.sql    # nuevo SKU: Coquitos de Hielo (2 presentaciones)
+    007_inventario.sql           # stock 3 niveles + movimientos_stock
+    008_objetivos.sql            # objetivos con métricas calculadas + seeds
 ```
 
 ---
@@ -123,7 +143,8 @@ Todo esto vive en memoria persistente pero listado aquí también porque es crí
 - **URL producción**: https://coqueros.vercel.app
 - **Framework** en Vercel: DEBE estar en `nextjs`. Si vuelve a `null`, el build corre pero no registra rutas → todo 404. Se arregla con `PATCH /v9/projects/coqueros` `{"framework":"nextjs"}`.
 - **SSO Protection**: deshabilitado (`ssoProtection: null`). Si se re-activa con `all_except_custom_domains`, `coqueros.vercel.app` devuelve 404.
-- **Env vars en Vercel** (Preview + Production): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`. También en `.env.local` para dev local.
+- **Env vars en Vercel** (Preview + Production): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` (marked Sensitive — sí, va al cliente), `GEMINI_API_KEY` (solo server). También en `.env.local` para dev local.
+- **Restricciones de Google Maps key**: la key `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` debe estar restringida por HTTP referrer a `coqueros.vercel.app/*` y `localhost:3000/*` en Google Cloud Console. Sin restricciones cualquiera puede usarla desde el bundle público. APIs habilitadas en el proyecto Google Cloud: Maps JavaScript API, Directions API, Distance Matrix API.
 - **Auto-deploy** desde GitHub `main` funciona. Si un build queda con caché rara, forzar con `npx vercel --prod --force --scope josephs-projects-6f38454c`.
 
 ---

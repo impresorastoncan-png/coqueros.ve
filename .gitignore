@@ -26,6 +26,8 @@ next-env.d.ts
 # Credentials — NUNCA commitear
 "supabase keys.txt"
 supabase keys.txt
+geminikey.PNG
+geminikey.png
 
 # Claude Code local settings
 .claude/
