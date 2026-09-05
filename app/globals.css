@@ -6,6 +6,30 @@
   box-sizing: border-box;
 }
 
+/* ─── Paleta light Coqueros ────────────────────────────────────────────────────
+   bg base:     #FAF7F0  (crema cálido)
+   superficie:  #FFFFFF  (blanco)
+   texto base:  #2a1a0e  (café oscuro)
+   secundario:  #6E3F22  (café marca)
+   muted:       #a8815a  (café claro/beige)
+   borde:       #E8DFCE  (crema+)
+   acentos:     #6FB04A verde · #FDC829 ámbar · #006994 azul · #ef4444 rojo
+*/
+:root {
+  --coq-bg:        #FAF7F0;
+  --coq-surface:   #FFFFFF;
+  --coq-text:      #2a1a0e;
+  --coq-secondary: #6E3F22;
+  --coq-muted:     #a8815a;
+  --coq-border:    #E8DFCE;
+  --coq-border-strong: #D4C9B0;
+}
+
+html, body {
+  background: var(--coq-bg);
+  color: var(--coq-text);
+}
+
 /* ─── Print styles para exportar ruta a PDF ─────────────────────────────────── */
 @media print {
   @page { size: A4; margin: 15mm; }

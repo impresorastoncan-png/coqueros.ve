@@ -36,48 +36,48 @@ export default function VisitaPanel({
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/60 z-40" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/40 z-40" onClick={onClose} />
 
       {/* Panel — slide up desde abajo en móvil, centrado en desktop */}
       <div className="fixed bottom-0 left-0 right-0 sm:inset-0 sm:flex sm:items-center sm:justify-center z-50">
-        <div className="bg-[#1a1007] border-t sm:border border-[#6E3F22]/60 sm:rounded-xl w-full sm:max-w-md p-5 sm:p-6 shadow-2xl">
+        <div className="bg-white border-t sm:border border-[#D4C9B0] sm:rounded-xl w-full sm:max-w-md p-5 sm:p-6 shadow-2xl">
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
             <div>
-              <div className="text-[10px] font-bold text-[#6FB04A] uppercase tracking-widest mb-0.5">Registrar visita</div>
-              <h2 className="font-bebas text-xl tracking-widest text-[#F5F5DC] leading-tight">{aliado.nombre}</h2>
-              <div className="text-xs text-[#C0D1C6] mt-0.5">{aliado.zona ?? ''}{aliado.zona && aliado.tipo ? ' · ' : ''}{aliado.tipo}</div>
+              <div className="text-[10px] font-bold text-[#4a7830] uppercase tracking-widest mb-0.5">Registrar visita</div>
+              <h2 className="font-bebas text-xl tracking-widest text-[#2a1a0e] leading-tight">{aliado.nombre}</h2>
+              <div className="text-xs text-[#a8815a] mt-0.5">{aliado.zona ?? ''}{aliado.zona && aliado.tipo ? ' · ' : ''}{aliado.tipo}</div>
             </div>
-            <button onClick={onClose} className="text-[#6E3F22] hover:text-[#C0D1C6] text-lg transition-colors mt-0.5">✕</button>
+            <button onClick={onClose} className="text-[#a8815a] hover:text-[#a8815a] text-lg transition-colors mt-0.5">✕</button>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-[10px] font-bold text-[#C0D1C6] uppercase tracking-widest mb-1.5">Resultado de la visita</label>
+              <label className="block text-[10px] font-bold text-[#a8815a] uppercase tracking-widest mb-1.5">Resultado de la visita</label>
               <textarea
                 value={form.resultado}
                 onChange={e => set('resultado', e.target.value)}
                 rows={3}
                 placeholder="¿Cómo fue? ¿Interesado? ¿Pidió degustación? ¿Vendió?"
-                className="w-full bg-[#2a1a0e] border border-[#6E3F22]/60 rounded-lg px-3 py-2.5 text-[#F5F5DC] text-sm placeholder-[#6E3F22] focus:outline-none focus:border-[#6FB04A] resize-none transition-colors"
+                className="w-full bg-[#FAF7F0] border border-[#D4C9B0] rounded-lg px-3 py-2.5 text-[#2a1a0e] text-sm placeholder-[#6E3F22] focus:outline-none focus:border-[#4a7830] focus:ring-2 focus:ring-[#6FB04A]/20 resize-none transition"
               />
             </div>
             <div>
-              <label className="block text-[10px] font-bold text-[#C0D1C6] uppercase tracking-widest mb-1.5">Próximo paso</label>
+              <label className="block text-[10px] font-bold text-[#a8815a] uppercase tracking-widest mb-1.5">Próximo paso</label>
               <input
                 value={form.proximo_paso}
                 onChange={e => set('proximo_paso', e.target.value)}
                 placeholder="Ej. Llamar el jueves para confirmar pedido"
-                className="w-full bg-[#2a1a0e] border border-[#6E3F22]/60 rounded-lg px-3 py-2.5 text-[#F5F5DC] text-sm placeholder-[#6E3F22] focus:outline-none focus:border-[#6FB04A] transition-colors"
+                className="w-full bg-[#FAF7F0] border border-[#D4C9B0] rounded-lg px-3 py-2.5 text-[#2a1a0e] text-sm placeholder-[#6E3F22] focus:outline-none focus:border-[#4a7830] focus:ring-2 focus:ring-[#6FB04A]/20 transition"
               />
             </div>
             <div>
-              <label className="block text-[10px] font-bold text-[#C0D1C6] uppercase tracking-widest mb-1.5">Tu nombre</label>
+              <label className="block text-[10px] font-bold text-[#a8815a] uppercase tracking-widest mb-1.5">Tu nombre</label>
               <input
                 value={form.responsable}
                 onChange={e => set('responsable', e.target.value)}
                 placeholder="¿Quién hizo la visita?"
-                className="w-full bg-[#2a1a0e] border border-[#6E3F22]/60 rounded-lg px-3 py-2.5 text-[#F5F5DC] text-sm placeholder-[#6E3F22] focus:outline-none focus:border-[#6FB04A] transition-colors"
+                className="w-full bg-[#FAF7F0] border border-[#D4C9B0] rounded-lg px-3 py-2.5 text-[#2a1a0e] text-sm placeholder-[#6E3F22] focus:outline-none focus:border-[#4a7830] focus:ring-2 focus:ring-[#6FB04A]/20 transition"
               />
             </div>
 

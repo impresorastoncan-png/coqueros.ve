@@ -28,6 +28,7 @@ export default function AliadoForm({
     direccion: aliado?.direccion ?? '',
     pipeline_stage_id: aliado?.pipeline_stage_id ?? (stages[0]?.id ?? ''),
     producto_principal_id: aliado?.producto_principal_id ?? '',
+    producto_interes_id: aliado?.producto_interes_id ?? '',
     tiene_nevera: aliado?.tiene_nevera ?? false,
     notas: aliado?.notas ?? '',
     lat: aliado?.lat?.toString() ?? '',
@@ -50,9 +51,9 @@ export default function AliadoForm({
           ...form,
           lat: form.lat ? parseFloat(form.lat) : null,
           lng: form.lng ? parseFloat(form.lng) : null,
-          // Solo enviar producto_principal_id si estamos en etapa Activo;
-          // en otras etapas se limpia para no arrastrar valores viejos.
+          // Producto principal solo aplica en Activo; producto de interés solo en potenciales.
           producto_principal_id: esActivo ? (form.producto_principal_id || null) : null,
+          producto_interes_id: esActivo ? null : (form.producto_interes_id || null),
         }
         if (aliado) {
           await actualizarAliado(aliado.id, payload as Parameters<typeof actualizarAliado>[1])
@@ -186,6 +187,31 @@ export default function AliadoForm({
               </option>
             ))}
           </select>
+        </div>
+      )}
+
+      {/* Producto de interés — solo si el aliado NO está en etapa Activo */}
+      {!esActivo && (
+        <div className="bg-[#FDC829]/5 border border-[#FDC829]/30 rounded-md p-3">
+          <label className="block text-xs font-semibold text-[#FDC829] uppercase tracking-wider mb-1.5">
+            Producto de interés
+            <span className="text-[#6E3F22] normal-case font-normal ml-1">(SKU que el prospecto quiere probar / vender)</span>
+          </label>
+          <select
+            value={form.producto_interes_id}
+            onChange={e => set('producto_interes_id', e.target.value)}
+            className="w-full bg-[#1a1007] border border-[#6E3F22]/60 rounded-md px-3 py-2.5 text-[#F5F5DC] text-sm focus:outline-none focus:border-[#6FB04A] transition-colors"
+          >
+            <option value="">— Sin definir —</option>
+            {productos.map(p => (
+              <option key={p.id} value={p.id}>
+                {p.nombre} · {p.presentacion}
+              </option>
+            ))}
+          </select>
+          <p className="text-[10px] text-[#6E3F22] mt-1">
+            Al pasar a etapa Activo, define el producto principal manualmente.
+          </p>
         </div>
       )}
 

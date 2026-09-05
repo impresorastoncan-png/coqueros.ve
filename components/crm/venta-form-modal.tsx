@@ -103,30 +103,30 @@ export default function VentaFormModal({ fecha, productos, aliados, onClose, onS
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="bg-[#2a1a0e] border border-[#6E3F22]/60 rounded-lg w-full max-w-2xl my-8 shadow-2xl">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#6E3F22]/40">
+    <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/40 backdrop-blur-sm p-4 overflow-y-auto">
+      <div className="bg-white border border-[#D4C9B0] rounded-lg w-full max-w-2xl my-8 shadow-2xl">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8DFCE]">
           <div>
-            <h2 className="font-bebas text-xl tracking-widest text-[#F5F5DC]">NUEVA VENTA</h2>
-            <p className="text-xs text-[#C0D1C6] mt-0.5">
+            <h2 className="font-bebas text-xl tracking-widest text-[#2a1a0e]">NUEVA VENTA</h2>
+            <p className="text-xs text-[#a8815a] mt-0.5">
               {new Date(fecha + 'T00:00:00').toLocaleDateString('es-VE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </p>
           </div>
-          <button onClick={onClose} className="text-[#C0D1C6] hover:text-white text-2xl leading-none">×</button>
+          <button onClick={onClose} className="text-[#a8815a] hover:text-white text-2xl leading-none">×</button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <label className="block">
-              <span className="block text-[10px] font-bold text-[#6E3F22] uppercase tracking-wider mb-1">Aliado (opcional)</span>
-              <select value={aliadoId} onChange={e => setAliadoId(e.target.value)} className="w-full bg-[#1a1007] border border-[#6E3F22]/60 rounded px-3 py-2 text-sm text-[#F5F5DC]">
+              <span className="block text-[10px] font-bold text-[#a8815a] uppercase tracking-wider mb-1">Aliado (opcional)</span>
+              <select value={aliadoId} onChange={e => setAliadoId(e.target.value)} className="w-full bg-[#FAF7F0] border border-[#D4C9B0] rounded px-3 py-2 text-sm text-[#2a1a0e]">
                 <option value="">— Venta directa —</option>
                 {aliados.map(a => <option key={a.id} value={a.id}>{a.nombre}</option>)}
               </select>
             </label>
             <label className="block">
-              <span className="block text-[10px] font-bold text-[#6E3F22] uppercase tracking-wider mb-1">Método de pago</span>
-              <select value={metodoPago} onChange={e => setMetodoPago(e.target.value)} className="w-full bg-[#1a1007] border border-[#6E3F22]/60 rounded px-3 py-2 text-sm text-[#F5F5DC]">
+              <span className="block text-[10px] font-bold text-[#a8815a] uppercase tracking-wider mb-1">Método de pago</span>
+              <select value={metodoPago} onChange={e => setMetodoPago(e.target.value)} className="w-full bg-[#FAF7F0] border border-[#D4C9B0] rounded px-3 py-2 text-sm text-[#2a1a0e]">
                 {METODOS.map(m => <option key={m.v} value={m.v}>{m.label}</option>)}
               </select>
             </label>
@@ -135,23 +135,23 @@ export default function VentaFormModal({ fecha, productos, aliados, onClose, onS
           {/* Líneas */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-bold text-[#6E3F22] uppercase tracking-wider">Líneas de venta</span>
+              <span className="text-[10px] font-bold text-[#a8815a] uppercase tracking-wider">Líneas de venta</span>
               <button
                 type="button"
                 onClick={() => setLineas(p => [...p, nuevaLinea()])}
-                className="text-xs text-[#6FB04A] hover:underline"
+                className="text-xs text-[#4a7830] hover:underline"
               >
                 + Otra línea
               </button>
             </div>
             <div className="space-y-2">
               {lineas.map((l, idx) => (
-                <div key={idx} className="bg-[#1a1007] border border-[#6E3F22]/40 rounded p-2 space-y-2">
+                <div key={idx} className="bg-[#FAF7F0] border border-[#E8DFCE] rounded p-2 space-y-2">
                   <div className="flex items-center gap-2">
                     <select
                       value={l.producto_id}
                       onChange={e => elegirProducto(idx, e.target.value)}
-                      className="flex-1 bg-[#2a1a0e] border border-[#6E3F22]/60 rounded px-2 py-1.5 text-xs text-[#F5F5DC]"
+                      className="flex-1 bg-white border border-[#D4C9B0] rounded px-2 py-1.5 text-xs text-[#2a1a0e]"
                     >
                       <option value="">— Manual (sin catálogo) —</option>
                       {productos.map(p => (
@@ -174,7 +174,7 @@ export default function VentaFormModal({ fecha, productos, aliados, onClose, onS
                       value={l.descripcion}
                       onChange={e => actualizarLinea(idx, { descripcion: e.target.value })}
                       placeholder="Descripción libre (ej: gasto delivery)"
-                      className="w-full bg-[#2a1a0e] border border-[#6E3F22]/60 rounded px-2 py-1.5 text-xs text-[#F5F5DC]"
+                      className="w-full bg-white border border-[#D4C9B0] rounded px-2 py-1.5 text-xs text-[#2a1a0e]"
                     />
                   )}
                   <div className="grid grid-cols-4 gap-2">
@@ -182,8 +182,8 @@ export default function VentaFormModal({ fecha, productos, aliados, onClose, onS
                     <NumField label="P. unit" value={l.precio_unit} onChange={v => actualizarLinea(idx, { precio_unit: v })} step={0.01} />
                     <NumField label="Costo u." value={l.costo_unit} onChange={v => actualizarLinea(idx, { costo_unit: v })} step={0.01} />
                     <div>
-                      <div className="text-[9px] font-bold text-[#6E3F22] uppercase tracking-wider mb-0.5">Subtotal</div>
-                      <div className="text-sm text-[#6FB04A] font-semibold py-1.5">${(l.cantidad * l.precio_unit).toFixed(2)}</div>
+                      <div className="text-[9px] font-bold text-[#a8815a] uppercase tracking-wider mb-0.5">Subtotal</div>
+                      <div className="text-sm text-[#4a7830] font-semibold py-1.5">${(l.cantidad * l.precio_unit).toFixed(2)}</div>
                     </div>
                   </div>
                 </div>
@@ -192,18 +192,18 @@ export default function VentaFormModal({ fecha, productos, aliados, onClose, onS
           </div>
 
           {/* Totales */}
-          <div className="bg-[#1a1007] border border-[#6E3F22]/40 rounded p-3 grid grid-cols-3 gap-2 text-center">
+          <div className="bg-[#FAF7F0] border border-[#E8DFCE] rounded p-3 grid grid-cols-3 gap-2 text-center">
             <div>
-              <div className="text-[10px] font-bold text-[#6E3F22] uppercase tracking-wider">Total venta</div>
-              <div className="text-lg font-bold text-[#F5F5DC]">${totalMonto.toFixed(2)}</div>
+              <div className="text-[10px] font-bold text-[#a8815a] uppercase tracking-wider">Total venta</div>
+              <div className="text-lg font-bold text-[#2a1a0e]">${totalMonto.toFixed(2)}</div>
             </div>
             <div>
-              <div className="text-[10px] font-bold text-[#6E3F22] uppercase tracking-wider">Costo total</div>
+              <div className="text-[10px] font-bold text-[#a8815a] uppercase tracking-wider">Costo total</div>
               <div className="text-lg font-bold text-[#FDC829]">${totalCosto.toFixed(2)}</div>
             </div>
             <div>
-              <div className="text-[10px] font-bold text-[#6E3F22] uppercase tracking-wider">Ganancia</div>
-              <div className="text-lg font-bold text-[#6FB04A]">${ganancia.toFixed(2)}</div>
+              <div className="text-[10px] font-bold text-[#a8815a] uppercase tracking-wider">Ganancia</div>
+              <div className="text-lg font-bold text-[#4a7830]">${ganancia.toFixed(2)}</div>
             </div>
           </div>
 
@@ -212,13 +212,13 @@ export default function VentaFormModal({ fecha, productos, aliados, onClose, onS
             onChange={e => setNotas(e.target.value)}
             rows={2}
             placeholder="Notas (opcional)"
-            className="w-full bg-[#1a1007] border border-[#6E3F22]/60 rounded px-3 py-2 text-sm text-[#F5F5DC]"
+            className="w-full bg-[#FAF7F0] border border-[#D4C9B0] rounded px-3 py-2 text-sm text-[#2a1a0e]"
           />
 
           {error && <p className="text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded px-3 py-2">{error}</p>}
 
           <div className="flex justify-end gap-2 pt-2">
-            <button type="button" onClick={onClose} className="text-sm text-[#C0D1C6] px-4 py-2 hover:text-white">Cancelar</button>
+            <button type="button" onClick={onClose} className="text-sm text-[#a8815a] px-4 py-2 hover:text-white">Cancelar</button>
             <button
               type="submit"
               disabled={pending}
@@ -236,14 +236,14 @@ export default function VentaFormModal({ fecha, productos, aliados, onClose, onS
 function NumField({ label, value, onChange, step = 1 }: { label: string; value: number; onChange: (v: number) => void; step?: number }) {
   return (
     <label className="block">
-      <span className="block text-[9px] font-bold text-[#6E3F22] uppercase tracking-wider mb-0.5">{label}</span>
+      <span className="block text-[9px] font-bold text-[#a8815a] uppercase tracking-wider mb-0.5">{label}</span>
       <input
         type="number"
         step={step}
         min={0}
         value={value}
         onChange={e => onChange(Number(e.target.value) || 0)}
-        className="w-full bg-[#2a1a0e] border border-[#6E3F22]/60 rounded px-2 py-1.5 text-xs text-[#F5F5DC]"
+        className="w-full bg-white border border-[#D4C9B0] rounded px-2 py-1.5 text-xs text-[#2a1a0e]"
       />
     </label>
   )

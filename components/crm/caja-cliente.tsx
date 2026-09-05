@@ -67,20 +67,21 @@ export default function CajaCliente({ anio, mes, movimientos, saldoTotal, ingres
     <>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="font-bebas text-3xl tracking-widest text-[#F5F5DC]">
+          <h1 className="font-bebas text-2xl sm:text-3xl tracking-widest text-[#2a1a0e]">
             CAJA · {MESES[mes - 1].toUpperCase()} {anio}
           </h1>
-          <p className="text-[#C0D1C6] text-sm mt-0.5">Ingresos, egresos y saldo neto. Las ventas se registran automáticamente.</p>
+          <p className="text-[#a8815a] text-sm mt-0.5">Ingresos, egresos y saldo neto. Las ventas se registran automáticamente.</p>
         </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => navegarMes(-1)} className="w-9 h-9 rounded border border-[#6E3F22]/60 text-[#C0D1C6] hover:bg-white/5 transition-colors">←</button>
-          <Link href="/crm/caja" className="text-xs uppercase tracking-wider px-3 py-2 rounded text-[#C0D1C6] hover:bg-white/5">Hoy</Link>
-          <button onClick={() => navegarMes(1)} className="w-9 h-9 rounded border border-[#6E3F22]/60 text-[#C0D1C6] hover:bg-white/5 transition-colors">→</button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button onClick={() => navegarMes(-1)} aria-label="Mes anterior" className="w-10 h-10 rounded border border-[#D4C9B0] text-[#6E3F22] hover:bg-black/5 transition-colors">←</button>
+          <Link href="/crm/caja" className="text-xs uppercase tracking-wider px-3 py-2.5 rounded text-[#6E3F22] hover:bg-black/5">Hoy</Link>
+          <button onClick={() => navegarMes(1)} aria-label="Mes siguiente" className="w-10 h-10 rounded border border-[#D4C9B0] text-[#6E3F22] hover:bg-black/5 transition-colors">→</button>
           <button
             onClick={() => setShowForm(true)}
-            className="ml-2 bg-[#6FB04A] hover:bg-[#5d9a3d] text-white text-xs font-semibold uppercase tracking-wider px-4 py-2 rounded transition-colors"
+            className="ml-auto sm:ml-2 bg-[#6FB04A] hover:bg-[#5d9a3d] text-white text-xs font-semibold uppercase tracking-wider px-4 py-2.5 rounded transition-colors shadow-sm"
           >
-            + Nuevo movimiento
+            <span className="sm:hidden">+ Nuevo</span>
+            <span className="hidden sm:inline">+ Nuevo movimiento</span>
           </button>
         </div>
       </div>
@@ -102,7 +103,7 @@ export default function CajaCliente({ anio, mes, movimientos, saldoTotal, ingres
           <select
             value={categoriaFiltro}
             onChange={e => setCategoriaFiltro(e.target.value)}
-            className="text-xs bg-[#1a1007] border border-[#6E3F22]/60 rounded px-3 py-1.5 text-[#F5F5DC]"
+            className="text-xs bg-[#FAF7F0] border border-[#D4C9B0] rounded px-3 py-1.5 text-[#2a1a0e]"
           >
             <option value="">Todas las categorías</option>
             {categoriasEnUso.map(c => (
@@ -110,20 +111,20 @@ export default function CajaCliente({ anio, mes, movimientos, saldoTotal, ingres
             ))}
           </select>
         )}
-        <div className="ml-auto text-xs text-[#6E3F22]">{filtradas.length} movimientos</div>
+        <div className="ml-auto text-xs text-[#a8815a]">{filtradas.length} movimientos</div>
       </div>
 
       {/* Tabla */}
       {filtradas.length === 0 ? (
-        <div className="bg-[#2a1a0e] border border-[#6E3F22]/40 rounded-lg p-12 text-center">
+        <div className="bg-white border border-[#E8DFCE] rounded-lg p-12 text-center">
           <div className="text-4xl mb-3">💸</div>
-          <p className="text-[#6E3F22] text-sm">Sin movimientos en este mes.</p>
+          <p className="text-[#a8815a] text-sm">Sin movimientos en este mes.</p>
         </div>
       ) : (
-        <div className="bg-[#2a1a0e] border border-[#6E3F22]/40 rounded-lg overflow-hidden">
+        <div className="bg-white border border-[#E8DFCE] rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-[#1a1007] text-[10px] uppercase tracking-widest text-[#C0D1C6]">
+              <thead className="bg-[#FAF7F0] text-[10px] uppercase tracking-widest text-[#a8815a]">
                 <tr>
                   <th className="text-left px-4 py-3">Fecha</th>
                   <th className="text-left px-4 py-3">Tipo</th>
@@ -134,7 +135,7 @@ export default function CajaCliente({ anio, mes, movimientos, saldoTotal, ingres
                   <th className="text-right px-4 py-3">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#6E3F22]/20">
+              <tbody className="divide-y divide-[#E8DFCE]">
                 {filtradas.map(m => <MovimientoRow key={m.id} m={m} />)}
               </tbody>
             </table>
@@ -151,28 +152,28 @@ export default function CajaCliente({ anio, mes, movimientos, saldoTotal, ingres
 
 function Kpi({ title, subtitle, value, color, icon }: { title: string; subtitle: string; value: number; color: string; icon: string }) {
   return (
-    <div className="bg-[#2a1a0e] border border-[#6E3F22]/40 rounded-lg p-5">
+    <div className="bg-white border border-[#E8DFCE] rounded-lg p-5">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-semibold text-[#C0D1C6] uppercase tracking-wider">{title}</span>
+        <span className="text-xs font-semibold text-[#a8815a] uppercase tracking-wider">{title}</span>
         <span className="text-xl">{icon}</span>
       </div>
       <div className="text-3xl font-bold" style={{ color }}>${value.toFixed(2)}</div>
-      <div className="text-xs text-[#6E3F22] mt-1.5">{subtitle}</div>
+      <div className="text-xs text-[#a8815a] mt-1.5">{subtitle}</div>
     </div>
   )
 }
 
 function FiltroBtn({ label, active, onClick, tone = 'neutral' }: { label: string; active: boolean; onClick: () => void; tone?: 'neutral' | 'verde' | 'rojo' }) {
   const activeColors = tone === 'verde'
-    ? 'border-[#6FB04A]/60 bg-[#6FB04A]/15 text-[#6FB04A]'
+    ? 'border-[#6FB04A]/60 bg-[#6FB04A]/15 text-[#4a7830]'
     : tone === 'rojo'
-      ? 'border-[#ef4444]/60 bg-[#ef4444]/15 text-[#ef4444]'
-      : 'border-[#F5F5DC]/40 bg-[#F5F5DC]/10 text-[#F5F5DC]'
+      ? 'border-[#ef4444]/60 bg-[#ef4444]/15 text-[#b91c1c]'
+      : 'border-[#D4C9B0] bg-[#FAF7F0] text-[#2a1a0e]'
   return (
     <button
       onClick={onClick}
       className={`text-xs px-3 py-1.5 rounded-md border transition-colors ${
-        active ? activeColors : 'border-[#6E3F22]/40 text-[#C0D1C6] hover:border-[#6E3F22]/60'
+        active ? activeColors : 'border-[#E8DFCE] text-[#a8815a] hover:border-[#D4C9B0]'
       }`}
     >
       {label}
@@ -201,39 +202,39 @@ function MovimientoRow({ m }: { m: CajaMovimiento }) {
 
   return (
     <tr>
-      <td className="px-4 py-2.5 text-[#C0D1C6] text-xs whitespace-nowrap">
+      <td className="px-4 py-2.5 text-[#a8815a] text-xs whitespace-nowrap">
         {new Date(m.fecha + 'T00:00:00').toLocaleDateString('es-VE', { day: '2-digit', month: 'short' })}
       </td>
       <td className="px-4 py-2.5">
         <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
           esIngreso
-            ? 'bg-[#6FB04A]/15 text-[#6FB04A] border border-[#6FB04A]/30'
-            : 'bg-[#ef4444]/15 text-[#ef4444] border border-[#ef4444]/30'
+            ? 'bg-[#6FB04A]/15 text-[#4a7830] border border-[#6FB04A]/30'
+            : 'bg-[#ef4444]/15 text-[#b91c1c] border border-[#ef4444]/30'
         }`}>
           {esIngreso ? '↑ Ingreso' : '↓ Egreso'}
         </span>
       </td>
-      <td className="px-4 py-2.5 text-[#F5F5DC] text-sm">{categoriaLabel}</td>
-      <td className={`px-4 py-2.5 text-right font-bold ${esIngreso ? 'text-[#6FB04A]' : 'text-[#ef4444]'}`}>
+      <td className="px-4 py-2.5 text-[#2a1a0e] text-sm">{categoriaLabel}</td>
+      <td className={`px-4 py-2.5 text-right font-bold ${esIngreso ? 'text-[#4a7830]' : 'text-[#b91c1c]'}`}>
         {esIngreso ? '+' : '−'}${Number(m.monto).toFixed(2)}
       </td>
-      <td className="px-4 py-2.5 text-[#C0D1C6] text-xs capitalize">{m.metodo_pago?.replace('-', ' ') ?? '—'}</td>
-      <td className="px-4 py-2.5 text-[#C0D1C6] text-xs">
+      <td className="px-4 py-2.5 text-[#a8815a] text-xs capitalize">{m.metodo_pago?.replace('-', ' ') ?? '—'}</td>
+      <td className="px-4 py-2.5 text-[#a8815a] text-xs">
         <div className="flex items-center gap-2">
           {esAuto && (
-            <span className="text-[9px] font-bold bg-[#006994]/15 text-[#67c8f0] border border-[#006994]/30 px-1.5 py-0.5 rounded uppercase tracking-wider">auto</span>
+            <span className="text-[9px] font-bold bg-[#006994]/15 text-[#006994] border border-[#006994]/30 px-1.5 py-0.5 rounded uppercase tracking-wider">auto</span>
           )}
           <span>{m.descripcion ?? '—'}</span>
         </div>
       </td>
       <td className="px-4 py-2.5 text-right">
         {esAuto ? (
-          <span className="text-[10px] text-[#6E3F22]">venta</span>
+          <span className="text-[10px] text-[#a8815a]">venta</span>
         ) : (
           <button
             onClick={onDelete}
             disabled={pending}
-            className="text-xs text-[#ef4444] hover:underline disabled:opacity-50"
+            className="text-xs text-[#b91c1c] hover:underline disabled:opacity-50"
           >
             Borrar
           </button>
@@ -283,11 +284,11 @@ function NuevoMovimientoModal({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70" onClick={onClose}>
-      <div className="bg-[#2a1a0e] border border-[#6E3F22]/60 rounded-lg max-w-lg w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#6E3F22]/40">
-          <h2 className="font-bebas text-lg tracking-widest text-[#F5F5DC]">Nuevo movimiento</h2>
-          <button onClick={onClose} className="text-[#C0D1C6] hover:text-white text-xl leading-none">×</button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
+      <div className="bg-white border border-[#D4C9B0] rounded-lg max-w-lg w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8DFCE]">
+          <h2 className="font-bebas text-lg tracking-widest text-[#2a1a0e]">Nuevo movimiento</h2>
+          <button onClick={onClose} aria-label="Cerrar" className="text-[#a8815a] hover:text-[#2a1a0e] text-2xl leading-none w-8 h-8">×</button>
         </div>
 
         <div className="p-5 space-y-4">
@@ -297,8 +298,8 @@ function NuevoMovimientoModal({ onClose }: { onClose: () => void }) {
               onClick={() => cambiarTipo('ingreso')}
               className={`px-3 py-3 rounded border text-sm font-semibold transition-colors ${
                 tipo === 'ingreso'
-                  ? 'border-[#6FB04A]/60 bg-[#6FB04A]/20 text-[#6FB04A]'
-                  : 'border-[#6E3F22]/40 text-[#C0D1C6] hover:border-[#6E3F22]/60'
+                  ? 'border-[#6FB04A]/60 bg-[#6FB04A]/20 text-[#4a7830]'
+                  : 'border-[#E8DFCE] text-[#a8815a] hover:border-[#D4C9B0]'
               }`}
             >
               ↑ Ingreso
@@ -307,8 +308,8 @@ function NuevoMovimientoModal({ onClose }: { onClose: () => void }) {
               onClick={() => cambiarTipo('egreso')}
               className={`px-3 py-3 rounded border text-sm font-semibold transition-colors ${
                 tipo === 'egreso'
-                  ? 'border-[#ef4444]/60 bg-[#ef4444]/20 text-[#ef4444]'
-                  : 'border-[#6E3F22]/40 text-[#C0D1C6] hover:border-[#6E3F22]/60'
+                  ? 'border-[#ef4444]/60 bg-[#ef4444]/20 text-[#b91c1c]'
+                  : 'border-[#E8DFCE] text-[#a8815a] hover:border-[#D4C9B0]'
               }`}
             >
               ↓ Egreso
@@ -320,14 +321,14 @@ function NuevoMovimientoModal({ onClose }: { onClose: () => void }) {
               <input
                 type="date" value={fecha}
                 onChange={e => setFecha(e.target.value)}
-                className="w-full bg-[#1a1007] border border-[#6E3F22]/60 rounded px-3 py-2 text-[#F5F5DC] text-sm"
+                className="w-full bg-[#FAF7F0] border border-[#D4C9B0] rounded px-3 py-2 text-[#2a1a0e] text-sm"
               />
             </Field>
             <Field label="Monto (USD)">
               <input
                 type="number" step="0.01" min="0.01" value={monto}
                 onChange={e => setMonto(e.target.value)}
-                className="w-full bg-[#1a1007] border border-[#6E3F22]/60 rounded px-3 py-2 text-[#F5F5DC] text-sm"
+                className="w-full bg-[#FAF7F0] border border-[#D4C9B0] rounded px-3 py-2 text-[#2a1a0e] text-sm"
                 placeholder="0.00"
                 autoFocus
               />
@@ -338,7 +339,7 @@ function NuevoMovimientoModal({ onClose }: { onClose: () => void }) {
             <select
               value={categoria}
               onChange={e => setCategoria(e.target.value)}
-              className="w-full bg-[#1a1007] border border-[#6E3F22]/60 rounded px-3 py-2 text-[#F5F5DC] text-sm"
+              className="w-full bg-[#FAF7F0] border border-[#D4C9B0] rounded px-3 py-2 text-[#2a1a0e] text-sm"
             >
               {categoriasDisponibles.map(c => (
                 <option key={c} value={c}>{LABEL_CATEGORIA_CAJA[c]}</option>
@@ -350,7 +351,7 @@ function NuevoMovimientoModal({ onClose }: { onClose: () => void }) {
             <select
               value={metodoPago}
               onChange={e => setMetodoPago(e.target.value as MetodoPago)}
-              className="w-full bg-[#1a1007] border border-[#6E3F22]/60 rounded px-3 py-2 text-[#F5F5DC] text-sm"
+              className="w-full bg-[#FAF7F0] border border-[#D4C9B0] rounded px-3 py-2 text-[#2a1a0e] text-sm"
             >
               {METODOS_PAGO.map(mp => (
                 <option key={mp.value} value={mp.value}>{mp.label}</option>
@@ -362,13 +363,13 @@ function NuevoMovimientoModal({ onClose }: { onClose: () => void }) {
             <input
               type="text" value={descripcion}
               onChange={e => setDescripcion(e.target.value)}
-              className="w-full bg-[#1a1007] border border-[#6E3F22]/60 rounded px-3 py-2 text-[#F5F5DC] text-sm"
+              className="w-full bg-[#FAF7F0] border border-[#D4C9B0] rounded px-3 py-2 text-[#2a1a0e] text-sm"
               placeholder="Ej: Gasolina ruta jueves"
             />
           </Field>
 
           <div className="flex gap-2 justify-end pt-2">
-            <button onClick={onClose} className="px-4 py-2 text-sm text-[#C0D1C6] hover:text-white">Cancelar</button>
+            <button onClick={onClose} className="px-4 py-2 text-sm text-[#a8815a] hover:text-white">Cancelar</button>
             <button
               onClick={submit}
               disabled={pending || !monto || Number(monto) <= 0}
@@ -386,7 +387,7 @@ function NuevoMovimientoModal({ onClose }: { onClose: () => void }) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="text-[10px] uppercase tracking-widest text-[#C0D1C6] mb-1 block">{label}</span>
+      <span className="text-[10px] uppercase tracking-widest text-[#a8815a] mb-1 block">{label}</span>
       {children}
     </label>
   )

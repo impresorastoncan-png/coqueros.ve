@@ -3,17 +3,19 @@
 import { useState, useMemo, useTransition } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import VisitaPanel from './visita-panel'
 import { TipoBadge, StageBadge } from './badge'
 import { loadMapsLibrary } from '@/lib/google-maps'
+import { asignarRuta } from '@/lib/actions/motorizado'
 import type { Aliado } from '@/lib/types'
 import type { RutaOptimizada } from './ruta-mapa'
 
 const RutaMapa = dynamic(() => import('./ruta-mapa'), {
   ssr: false,
   loading: () => (
-    <div className="h-full flex items-center justify-center bg-[#2a1a0e] rounded-lg border border-[#6E3F22]/40">
-      <p className="text-[#6E3F22] text-sm">Cargando mapa...</p>
+    <div className="h-full flex items-center justify-center bg-white rounded-lg border border-[#E8DFCE]">
+      <p className="text-[#a8815a] text-sm">Cargando mapa...</p>
     </div>
   ),
 })
@@ -38,6 +40,7 @@ export default function RutaCliente({
   const [rutaOptimizada, setRutaOptimizada] = useState<RutaOptimizada | null>(null)
   const [optimizando, startOptimizar] = useTransition()
   const [errorRuta, setErrorRuta] = useState<string | null>(null)
+  const [modalMotorizado, setModalMotorizado] = useState(false)
 
   const filtrados = useMemo(() => {
     let list = aliados
@@ -109,16 +112,16 @@ export default function RutaCliente({
 
       {/* Toolbar */}
       <div className="print:hidden flex flex-wrap items-center gap-3 mb-4">
-        <div className="flex bg-[#2a1a0e] border border-[#6E3F22]/40 rounded-lg p-1 gap-1">
+        <div className="flex bg-white border border-[#E8DFCE] rounded-lg p-1 gap-1">
           <button
             onClick={() => setVista('lista')}
-            className={`px-3 py-1.5 rounded text-xs font-semibold transition-colors ${vista === 'lista' ? 'bg-[#6FB04A] text-white' : 'text-[#C0D1C6] hover:text-white'}`}
+            className={`px-3 py-1.5 rounded text-xs font-semibold transition-colors ${vista === 'lista' ? 'bg-[#6FB04A] text-white' : 'text-[#a8815a] hover:text-white'}`}
           >
             ☰ Lista
           </button>
           <button
             onClick={() => setVista('mapa')}
-            className={`px-3 py-1.5 rounded text-xs font-semibold transition-colors ${vista === 'mapa' ? 'bg-[#6FB04A] text-white' : 'text-[#C0D1C6] hover:text-white'}`}
+            className={`px-3 py-1.5 rounded text-xs font-semibold transition-colors ${vista === 'mapa' ? 'bg-[#6FB04A] text-white' : 'text-[#a8815a] hover:text-white'}`}
           >
             🗺 Mapa
           </button>
@@ -127,7 +130,7 @@ export default function RutaCliente({
         <select
           value={zonaFiltro}
           onChange={e => { setZonaFiltro(e.target.value); setRutaOptimizada(null) }}
-          className="bg-[#2a1a0e] border border-[#6E3F22]/60 rounded-lg px-3 py-2 text-[#F5F5DC] text-sm focus:outline-none focus:border-[#6FB04A]"
+          className="bg-white border border-[#D4C9B0] rounded-lg px-3 py-2 text-[#2a1a0e] text-sm focus:outline-none focus:border-[#6FB04A]"
         >
           <option value="">Todas las zonas</option>
           {ZONAS.map(z => <option key={z} value={z}>{z}</option>)}
@@ -140,26 +143,26 @@ export default function RutaCliente({
           >
             <div className={`w-3.5 h-3.5 bg-white rounded-full shadow transition-transform mx-0.5 ${soloConNevera ? 'translate-x-4' : 'translate-x-0'}`} />
           </div>
-          <span className="text-xs text-[#C0D1C6]">Solo con nevera ❄️</span>
+          <span className="text-xs text-[#a8815a]">Solo con nevera ❄️</span>
         </label>
 
-        <div className="ml-auto flex gap-3 text-xs text-[#C0D1C6]">
-          <span><span className="font-bold text-[#F5F5DC]">{sinVisitar.length}</span> pendientes</span>
-          <span><span className="font-bold text-[#6FB04A]">{yaVisitados.length}</span> visitados hoy</span>
+        <div className="ml-auto flex gap-3 text-xs text-[#a8815a]">
+          <span><span className="font-bold text-[#2a1a0e]">{sinVisitar.length}</span> pendientes</span>
+          <span><span className="font-bold text-[#4a7830]">{yaVisitados.length}</span> visitados hoy</span>
         </div>
       </div>
 
       {/* Panel de planificación */}
-      <div className="print:hidden bg-[#2a1a0e] border border-[#6E3F22]/40 rounded-lg p-4 mb-4">
+      <div className="print:hidden bg-white border border-[#E8DFCE] rounded-lg p-4 mb-4">
         <div className="flex items-center justify-between flex-wrap gap-3 mb-3">
           <div>
-            <h3 className="font-bebas text-sm tracking-widest text-[#F5F5DC]">🧭 PLANIFICACIÓN DE RUTA</h3>
-            <p className="text-xs text-[#6E3F22] mt-0.5">Optimiza el orden de {paradasCoords.length} paradas pendientes</p>
+            <h3 className="font-bebas text-sm tracking-widest text-[#2a1a0e]">🧭 PLANIFICACIÓN DE RUTA</h3>
+            <p className="text-xs text-[#a8815a] mt-0.5">Optimiza el orden de {paradasCoords.length} paradas pendientes</p>
           </div>
           <div className="flex gap-2">
             <button
               onClick={usarUbicacionActual}
-              className="text-xs px-3 py-1.5 border border-[#6E3F22]/40 text-[#C0D1C6] hover:border-[#6E3F22]/60 rounded"
+              className="text-xs px-3 py-1.5 border border-[#E8DFCE] text-[#a8815a] hover:border-[#D4C9B0] rounded"
             >
               📍 Mi ubicación
             </button>
@@ -171,32 +174,40 @@ export default function RutaCliente({
               {optimizando ? '⏳ Calculando...' : '✨ Optimizar ruta'}
             </button>
             {rutaOptimizada && (
-              <button
-                onClick={imprimir}
-                className="text-xs px-3 py-1.5 border border-[#FDC829]/40 bg-[#FDC829]/10 text-[#FDC829] hover:bg-[#FDC829]/20 rounded font-semibold"
-              >
-                📄 Exportar PDF
-              </button>
+              <>
+                <button
+                  onClick={imprimir}
+                  className="text-xs px-3 py-1.5 border border-[#FDC829]/40 bg-[#FDC829]/10 text-[#FDC829] hover:bg-[#FDC829]/20 rounded font-semibold"
+                >
+                  📄 Exportar PDF
+                </button>
+                <button
+                  onClick={() => setModalMotorizado(true)}
+                  className="text-xs px-3 py-1.5 border border-[#6E3F22]/40 bg-[#6E3F22]/10 text-[#6E3F22] hover:bg-[#6E3F22]/20 rounded font-semibold"
+                >
+                  🏍️ Asignar a motorizado
+                </button>
+              </>
             )}
           </div>
         </div>
 
         {errorRuta && (
-          <p className="text-xs text-[#ef4444] mb-2">{errorRuta}</p>
+          <p className="text-xs text-[#b91c1c] mb-2">{errorRuta}</p>
         )}
 
         {rutaOptimizada && (
-          <div className="grid grid-cols-3 gap-3 text-center bg-[#1a1007] rounded p-3">
+          <div className="grid grid-cols-3 gap-3 text-center bg-[#FAF7F0] rounded p-3">
             <div>
-              <div className="text-[10px] uppercase tracking-widest text-[#6E3F22]">Paradas</div>
-              <div className="text-lg font-bold text-[#F5F5DC]">{rutaOptimizada.orden.length}</div>
+              <div className="text-[10px] uppercase tracking-widest text-[#a8815a]">Paradas</div>
+              <div className="text-lg font-bold text-[#2a1a0e]">{rutaOptimizada.orden.length}</div>
             </div>
             <div>
-              <div className="text-[10px] uppercase tracking-widest text-[#6E3F22]">Distancia total</div>
-              <div className="text-lg font-bold text-[#6FB04A]">{(rutaOptimizada.distanciaMetros / 1000).toFixed(1)} km</div>
+              <div className="text-[10px] uppercase tracking-widest text-[#a8815a]">Distancia total</div>
+              <div className="text-lg font-bold text-[#4a7830]">{(rutaOptimizada.distanciaMetros / 1000).toFixed(1)} km</div>
             </div>
             <div>
-              <div className="text-[10px] uppercase tracking-widest text-[#6E3F22]">Tiempo estimado</div>
+              <div className="text-[10px] uppercase tracking-widest text-[#a8815a]">Tiempo estimado</div>
               <div className="text-lg font-bold text-[#FDC829]">{formatMinutos(rutaOptimizada.duracionSegundos)}</div>
             </div>
           </div>
@@ -214,9 +225,9 @@ export default function RutaCliente({
             rutaOptimizada={rutaOptimizada}
           />
           {filtrados.filter(a => !a.lat || !a.lng).length > 0 && (
-            <p className="text-xs text-[#6E3F22] mt-2">
+            <p className="text-xs text-[#a8815a] mt-2">
               ⚠ {filtrados.filter(a => !a.lat || !a.lng).length} aliado(s) sin coordenadas no aparecen en el mapa.
-              <Link href="/crm/aliados" className="text-[#C0D1C6] hover:underline ml-1">Agrégalas desde el detalle del aliado.</Link>
+              <Link href="/crm/aliados" className="text-[#a8815a] hover:underline ml-1">Agrégalas desde el detalle del aliado.</Link>
             </p>
           )}
         </div>
@@ -224,7 +235,7 @@ export default function RutaCliente({
         <div className="print:hidden space-y-6">
           {rutaOptimizada && (
             <div>
-              <h2 className="text-[10px] font-bold text-[#6FB04A] uppercase tracking-widest mb-3">
+              <h2 className="text-[10px] font-bold text-[#4a7830] uppercase tracking-widest mb-3">
                 Ruta optimizada — orden sugerido
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
@@ -243,7 +254,7 @@ export default function RutaCliente({
 
           {!rutaOptimizada && sinVisitar.length > 0 && (
             <div>
-              <h2 className="text-[10px] font-bold text-[#C0D1C6] uppercase tracking-widest mb-3">
+              <h2 className="text-[10px] font-bold text-[#a8815a] uppercase tracking-widest mb-3">
                 Pendientes — {sinVisitar.length}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
@@ -261,7 +272,7 @@ export default function RutaCliente({
 
           {yaVisitados.length > 0 && (
             <div>
-              <h2 className="text-[10px] font-bold text-[#6FB04A] uppercase tracking-widest mb-3">
+              <h2 className="text-[10px] font-bold text-[#4a7830] uppercase tracking-widest mb-3">
                 ✓ Visitados hoy — {yaVisitados.length}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
@@ -278,7 +289,7 @@ export default function RutaCliente({
           )}
 
           {filtrados.length === 0 && (
-            <div className="text-center py-16 text-[#6E3F22]">
+            <div className="text-center py-16 text-[#a8815a]">
               <div className="text-4xl mb-3">🗺️</div>
               <p className="text-sm">No hay aliados para los filtros seleccionados.</p>
             </div>
@@ -294,6 +305,13 @@ export default function RutaCliente({
           aliado={aliadoVisita}
           onClose={() => setAliadoVisita(null)}
           onDone={handleDone}
+        />
+      )}
+
+      {modalMotorizado && rutaOptimizada && (
+        <AsignarMotorizadoModal
+          ruta={rutaOptimizada}
+          onClose={() => setModalMotorizado(false)}
         />
       )}
     </div>
@@ -319,7 +337,7 @@ function AliadoCard({
     : null
 
   return (
-    <div className={`bg-[#2a1a0e] border rounded-xl p-4 transition-colors ${visitado ? 'border-[#6FB04A]/40 opacity-70' : 'border-[#6E3F22]/40 hover:border-[#6E3F22]/60'}`}>
+    <div className={`bg-white border rounded-xl p-4 transition-colors ${visitado ? 'border-[#6FB04A]/40 opacity-70' : 'border-[#E8DFCE] hover:border-[#D4C9B0]'}`}>
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
@@ -329,16 +347,16 @@ function AliadoCard({
               </span>
             )}
             {visitado && (
-              <span className="text-[10px] font-bold bg-[#6FB04A]/20 text-[#6FB04A] border border-[#6FB04A]/30 px-1.5 py-0.5 rounded">
+              <span className="text-[10px] font-bold bg-[#6FB04A]/20 text-[#4a7830] border border-[#6FB04A]/30 px-1.5 py-0.5 rounded">
                 ✓ Visitado
               </span>
             )}
           </div>
-          <Link href={`/crm/aliados/${aliado.id}`} className="font-semibold text-[#F5F5DC] hover:text-[#6FB04A] transition-colors text-sm leading-tight block mt-1">
+          <Link href={`/crm/aliados/${aliado.id}`} className="font-semibold text-[#2a1a0e] hover:text-[#4a7830] transition-colors text-sm leading-tight block mt-1">
             {aliado.nombre}
           </Link>
           {aliado.direccion && (
-            <p className="text-xs text-[#6E3F22] mt-0.5 truncate">{aliado.direccion}</p>
+            <p className="text-xs text-[#a8815a] mt-0.5 truncate">{aliado.direccion}</p>
           )}
         </div>
         {aliado.tiene_nevera && <span className="text-lg shrink-0" title="Nevera colocada">❄️</span>}
@@ -347,7 +365,7 @@ function AliadoCard({
       <div className="flex flex-wrap gap-1.5 mb-3">
         <TipoBadge tipo={aliado.tipo} />
         {aliado.zona && (
-          <span className="text-[10px] text-[#6E3F22] bg-[#6E3F22]/10 border border-[#6E3F22]/20 px-1.5 py-0.5 rounded">
+          <span className="text-[10px] text-[#a8815a] bg-[#6E3F22]/10 border border-[#E8DFCE]/60 px-1.5 py-0.5 rounded">
             📍 {aliado.zona}
           </span>
         )}
@@ -357,7 +375,7 @@ function AliadoCard({
       </div>
 
       {contactoPrincipal && (
-        <div className="text-xs text-[#C0D1C6] mb-3 truncate">
+        <div className="text-xs text-[#a8815a] mb-3 truncate">
           👤 {contactoPrincipal.nombre}{contactoPrincipal.cargo ? ` · ${contactoPrincipal.cargo}` : ''}
         </div>
       )}
@@ -374,7 +392,7 @@ function AliadoCard({
         {!visitado && (
           <button
             onClick={onVisitar}
-            className="flex-1 flex items-center justify-center gap-1 bg-[#6FB04A]/15 hover:bg-[#6FB04A]/25 border border-[#6FB04A]/30 text-[#6FB04A] text-xs font-semibold py-2 rounded-lg"
+            className="flex-1 flex items-center justify-center gap-1 bg-[#6FB04A]/15 hover:bg-[#6FB04A]/25 border border-[#6FB04A]/30 text-[#4a7830] text-xs font-semibold py-2 rounded-lg"
           >
             ✓ Visitar
           </button>
@@ -382,7 +400,7 @@ function AliadoCard({
         {visitado && (
           <button
             onClick={onVisitar}
-            className="flex-1 flex items-center justify-center text-[10px] text-[#6E3F22] hover:text-[#C0D1C6] py-2 rounded-lg border border-[#6E3F22]/20"
+            className="flex-1 flex items-center justify-center text-[10px] text-[#a8815a] hover:text-[#a8815a] py-2 rounded-lg border border-[#E8DFCE]/60"
           >
             + otra visita
           </button>
@@ -452,6 +470,152 @@ function PrintableRuta({ ruta, zona }: { ruta: RutaOptimizada; zona: string }) {
       <p className="print-foot">
         Ruta optimizada por Google Maps · Coqueros CRM · impreso {new Date().toLocaleString('es-VE')}
       </p>
+    </div>
+  )
+}
+
+function AsignarMotorizadoModal({
+  ruta, onClose,
+}: {
+  ruta: RutaOptimizada
+  onClose: () => void
+}) {
+  const router = useRouter()
+  const km = ruta.distanciaMetros / 1000
+  const [fecha, setFecha] = useState(() => new Date().toISOString().slice(0, 10))
+  const [tarifa, setTarifa] = useState('0.22')
+  const [nombre, setNombre] = useState('')
+  const [notas, setNotas] = useState('')
+  const [saving, startSaving] = useTransition()
+  const [error, setError] = useState<string | null>(null)
+
+  const tarifaNum = parseFloat(tarifa) || 0
+  const costo = km * tarifaNum
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setError(null)
+    startSaving(async () => {
+      try {
+        await asignarRuta({
+          fecha,
+          km: parseFloat(km.toFixed(2)),
+          tarifa_usd_km: tarifaNum,
+          num_paradas: ruta.orden.length,
+          duracion_segundos: ruta.duracionSegundos,
+          origen_lat: ruta.origen.lat,
+          origen_lng: ruta.origen.lng,
+          motorizado_nombre: nombre.trim() || null,
+          notas: notas.trim() || null,
+          snapshot: ruta.orden.map(a => ({
+            id: a.id,
+            nombre: a.nombre,
+            zona: a.zona,
+            direccion: a.direccion,
+          })),
+        })
+        onClose()
+        router.push('/crm/motorizado')
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Error al asignar la ruta')
+      }
+    })
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={onClose}>
+      <div
+        className="bg-white rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-bebas text-xl tracking-widest text-[#2a1a0e]">🏍️ ASIGNAR A MOTORIZADO</h2>
+          <button onClick={onClose} className="text-[#a8815a] hover:text-[#2a1a0e] text-2xl leading-none">×</button>
+        </div>
+
+        <div className="bg-[#FAF7F0] rounded p-3 mb-4 grid grid-cols-3 gap-2 text-center">
+          <div>
+            <div className="text-[10px] uppercase tracking-widest text-[#a8815a]">Distancia</div>
+            <div className="font-bold text-[#4a7830]">{km.toFixed(1)} km</div>
+          </div>
+          <div>
+            <div className="text-[10px] uppercase tracking-widest text-[#a8815a]">Paradas</div>
+            <div className="font-bold text-[#2a1a0e]">{ruta.orden.length}</div>
+          </div>
+          <div>
+            <div className="text-[10px] uppercase tracking-widest text-[#a8815a]">Costo</div>
+            <div className="font-bold text-[#2a1a0e]">${costo.toFixed(2)}</div>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <div>
+            <label className="block text-xs font-semibold text-[#6E3F22] mb-1">Fecha</label>
+            <input
+              type="date"
+              value={fecha}
+              onChange={e => setFecha(e.target.value)}
+              required
+              className="w-full border border-[#D4C9B0] rounded px-3 py-2 text-sm text-[#2a1a0e] focus:outline-none focus:border-[#6FB04A]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[#6E3F22] mb-1">Tarifa por km (USD)</label>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              value={tarifa}
+              onChange={e => setTarifa(e.target.value)}
+              required
+              className="w-full border border-[#D4C9B0] rounded px-3 py-2 text-sm text-[#2a1a0e] focus:outline-none focus:border-[#6FB04A]"
+            />
+            <p className="text-[10px] text-[#a8815a] mt-1">Precargado en $0.22. La tarifa queda registrada en la ruta.</p>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[#6E3F22] mb-1">Motorizado (opcional)</label>
+            <input
+              type="text"
+              value={nombre}
+              onChange={e => setNombre(e.target.value)}
+              placeholder="Ej: José"
+              className="w-full border border-[#D4C9B0] rounded px-3 py-2 text-sm text-[#2a1a0e] focus:outline-none focus:border-[#6FB04A]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[#6E3F22] mb-1">Notas (opcional)</label>
+            <textarea
+              value={notas}
+              onChange={e => setNotas(e.target.value)}
+              rows={2}
+              className="w-full border border-[#D4C9B0] rounded px-3 py-2 text-sm text-[#2a1a0e] focus:outline-none focus:border-[#6FB04A]"
+            />
+          </div>
+
+          {error && <p className="text-xs text-[#b91c1c]">{error}</p>}
+
+          <div className="flex gap-2 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={saving}
+              className="flex-1 py-2 rounded border border-[#D4C9B0] text-[#6E3F22] text-sm font-semibold hover:bg-black/5 disabled:opacity-50"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={saving || tarifaNum <= 0}
+              className="flex-1 py-2 rounded bg-[#6FB04A] hover:bg-[#5a9a3a] text-white text-sm font-semibold disabled:opacity-50"
+            >
+              {saving ? 'Guardando...' : 'Asignar ruta'}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }

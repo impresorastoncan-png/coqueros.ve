@@ -33,8 +33,8 @@ export default async function RutaPage() {
     <div className="p-4 sm:p-6 lg:p-8 flex flex-col min-h-screen">
       {/* Header */}
       <div className="mb-5">
-        <h1 className="font-bebas text-3xl tracking-widest text-[#F5F5DC]">RUTA DE HOY</h1>
-        <p className="text-[#C0D1C6] text-sm mt-0.5">
+        <h1 className="font-bebas text-2xl sm:text-3xl tracking-widest text-[#2a1a0e]">RUTA DE HOY</h1>
+        <p className="text-[#6E3F22] text-sm mt-0.5">
           {new Date().toLocaleDateString('es-VE', { weekday: 'long', day: 'numeric', month: 'long' })}
         </p>
       </div>

@@ -65,28 +65,28 @@ export default function VentasCalendario({ anio, mes, ventas, productos, aliados
   const hoyIso = new Date().toISOString().slice(0, 10)
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
       {/* Calendario */}
       <div className="lg:col-span-3">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
-            <h1 className="font-bebas text-3xl tracking-widest text-[#F5F5DC]">
+            <h1 className="font-bebas text-2xl sm:text-3xl tracking-widest text-[#2a1a0e]">
               VENTAS · {MESES[mes - 1].toUpperCase()} {anio}
             </h1>
-            <p className="text-[#C0D1C6] text-sm mt-0.5">Registra cada venta del mes con producto, cantidad y costo.</p>
+            <p className="text-[#6E3F22] text-sm mt-0.5">Registra cada venta del mes con producto, cantidad y costo.</p>
           </div>
           <div className="flex items-center gap-1">
-            <button onClick={() => navegarMes(-1)} className="w-9 h-9 rounded border border-[#6E3F22]/60 text-[#C0D1C6] hover:bg-white/5 transition-colors">←</button>
-            <Link href="/crm/ventas" className="text-xs uppercase tracking-wider px-3 py-2 rounded text-[#C0D1C6] hover:bg-white/5">Hoy</Link>
-            <button onClick={() => navegarMes(1)} className="w-9 h-9 rounded border border-[#6E3F22]/60 text-[#C0D1C6] hover:bg-white/5 transition-colors">→</button>
+            <button onClick={() => navegarMes(-1)} aria-label="Mes anterior" className="w-10 h-10 rounded border border-[#D4C9B0] text-[#6E3F22] hover:bg-black/5 transition-colors">←</button>
+            <Link href="/crm/ventas" className="text-xs uppercase tracking-wider px-3 py-2.5 rounded text-[#6E3F22] hover:bg-black/5">Hoy</Link>
+            <button onClick={() => navegarMes(1)} aria-label="Mes siguiente" className="w-10 h-10 rounded border border-[#D4C9B0] text-[#6E3F22] hover:bg-black/5 transition-colors">→</button>
           </div>
         </div>
 
-        <div className="bg-[#2a1a0e] border border-[#6E3F22]/40 rounded-lg overflow-hidden">
+        <div className="bg-white border border-[#E8DFCE] rounded-lg overflow-hidden">
           {/* Header días */}
-          <div className="grid grid-cols-7 border-b border-[#6E3F22]/40 bg-[#1a1007]/50">
+          <div className="grid grid-cols-7 border-b border-[#E8DFCE] bg-[#FAF7F0]/50">
             {DIAS.map(d => (
-              <div key={d} className="text-center text-[10px] font-bold text-[#6E3F22] uppercase tracking-widest py-2">
+              <div key={d} className="text-center text-[10px] font-bold text-[#a8815a] uppercase tracking-widest py-2">
                 {d}
               </div>
             ))}
@@ -94,7 +94,7 @@ export default function VentasCalendario({ anio, mes, ventas, productos, aliados
           {/* Grid */}
           <div className="grid grid-cols-7">
             {grid.map((cell, idx) => {
-              if (!cell) return <div key={idx} className="min-h-[92px] border-r border-b border-[#6E3F22]/20 bg-[#1a1007]/30" />
+              if (!cell) return <div key={idx} className="min-h-[64px] sm:min-h-[92px] border-r border-b border-[#E8DFCE]/60 bg-[#FAF7F0]/30" />
               const fechaIso = `${anio}-${String(mes).padStart(2, '0')}-${String(cell).padStart(2, '0')}`
               const ventasDia = ventasPorDia.get(fechaIso) ?? []
               const montoDia = ventasDia.reduce((a, v) => a + Number(v.monto_total ?? 0), 0)
@@ -105,20 +105,20 @@ export default function VentasCalendario({ anio, mes, ventas, productos, aliados
                 <button
                   key={idx}
                   onClick={() => setDiaSeleccionado(fechaIso)}
-                  className={`min-h-[92px] border-r border-b border-[#6E3F22]/20 p-2 text-left transition-colors relative group ${
+                  className={`min-h-[64px] sm:min-h-[92px] border-r border-b border-[#E8DFCE]/60 p-2 text-left transition-colors relative group ${
                     activo ? 'bg-[#6FB04A]/15 ring-1 ring-inset ring-[#6FB04A]/50' : 'hover:bg-[#6FB04A]/5'
                   }`}
                 >
                   <div className="flex items-start justify-between mb-1">
-                    <span className={`text-xs font-bold ${esHoy ? 'text-[#FDC829]' : 'text-[#C0D1C6]'}`}>{cell}</span>
+                    <span className={`text-xs font-bold ${esHoy ? 'text-[#FDC829]' : 'text-[#a8815a]'}`}>{cell}</span>
                     {ventasDia.length > 0 && (
-                      <span className="text-[9px] bg-[#6FB04A]/25 text-[#6FB04A] px-1.5 py-0.5 rounded-full font-bold">
+                      <span className="text-[9px] bg-[#6FB04A]/25 text-[#4a7830] px-1.5 py-0.5 rounded-full font-bold">
                         {ventasDia.length}
                       </span>
                     )}
                   </div>
                   {montoDia > 0 && (
-                    <div className="text-[11px] text-[#6FB04A] font-bold">${montoDia.toFixed(0)}</div>
+                    <div className="text-[11px] text-[#4a7830] font-bold">${montoDia.toFixed(0)}</div>
                   )}
                 </button>
               )
@@ -130,31 +130,31 @@ export default function VentasCalendario({ anio, mes, ventas, productos, aliados
       {/* Panel lateral */}
       <div className="lg:col-span-1 space-y-4">
         {/* Totales del mes */}
-        <div className="bg-[#2a1a0e] border border-[#6E3F22]/40 rounded-lg p-5">
-          <h3 className="font-bebas text-lg tracking-widest text-[#F5F5DC] mb-4">TOTALES DEL MES</h3>
+        <div className="bg-white border border-[#E8DFCE] rounded-lg p-5">
+          <h3 className="font-bebas text-lg tracking-widest text-[#2a1a0e] mb-4">TOTALES DEL MES</h3>
           <div className="space-y-3">
             <Kpi label="Ventas" value={`$${totales.monto.toFixed(2)}`} color="#6FB04A" />
             <Kpi label="Costo"  value={`$${totales.costo.toFixed(2)}`} color="#FDC829" />
-            <div className="border-t border-[#6E3F22]/40 pt-3 mt-2">
+            <div className="border-t border-[#E8DFCE] pt-3 mt-2">
               <Kpi label="Ganancia" value={`$${totales.ganancia.toFixed(2)}`} color="#6FB04A" big />
             </div>
-            <div className="grid grid-cols-2 gap-3 pt-2 border-t border-[#6E3F22]/40">
+            <div className="grid grid-cols-2 gap-3 pt-2 border-t border-[#E8DFCE]">
               <div>
-                <div className="text-[10px] font-bold text-[#6E3F22] uppercase tracking-wider">Transacciones</div>
-                <div className="text-lg font-bold text-[#C0D1C6]">{totales.cantidad}</div>
+                <div className="text-[10px] font-bold text-[#a8815a] uppercase tracking-wider">Transacciones</div>
+                <div className="text-lg font-bold text-[#a8815a]">{totales.cantidad}</div>
               </div>
               <div>
-                <div className="text-[10px] font-bold text-[#6E3F22] uppercase tracking-wider">Ticket prom.</div>
-                <div className="text-lg font-bold text-[#C0D1C6]">${totales.ticket.toFixed(2)}</div>
+                <div className="text-[10px] font-bold text-[#a8815a] uppercase tracking-wider">Ticket prom.</div>
+                <div className="text-lg font-bold text-[#a8815a]">${totales.ticket.toFixed(2)}</div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Día seleccionado */}
-        <div className="bg-[#2a1a0e] border border-[#6E3F22]/40 rounded-lg p-5">
+        <div className="bg-white border border-[#E8DFCE] rounded-lg p-5">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-bebas text-lg tracking-widest text-[#F5F5DC]">
+            <h3 className="font-bebas text-lg tracking-widest text-[#2a1a0e]">
               {diaSeleccionado ? formatoFecha(diaSeleccionado) : 'Elige un día'}
             </h3>
             {diaSeleccionado && (
@@ -166,30 +166,30 @@ export default function VentasCalendario({ anio, mes, ventas, productos, aliados
               </button>
             )}
           </div>
-          {!diaSeleccionado && <p className="text-sm text-[#6E3F22] italic">Click en un día del calendario para ver o registrar ventas.</p>}
-          {diaSeleccionado && ventasDelDia.length === 0 && <p className="text-sm text-[#6E3F22] italic">Sin ventas en este día.</p>}
+          {!diaSeleccionado && <p className="text-sm text-[#a8815a] italic">Click en un día del calendario para ver o registrar ventas.</p>}
+          {diaSeleccionado && ventasDelDia.length === 0 && <p className="text-sm text-[#a8815a] italic">Sin ventas en este día.</p>}
           {diaSeleccionado && ventasDelDia.length > 0 && (
             <div className="space-y-2">
               {ventasDelDia.map(v => (
-                <div key={v.id} className="bg-[#1a1007] border border-[#6E3F22]/40 rounded p-3 group">
+                <div key={v.id} className="bg-[#FAF7F0] border border-[#E8DFCE] rounded p-3 group">
                   <div className="flex items-start justify-between mb-1">
-                    <span className="text-sm font-semibold text-[#F5F5DC]">
-                      {v.aliado?.nombre ?? <span className="text-[#6E3F22] italic">Venta directa</span>}
+                    <span className="text-sm font-semibold text-[#2a1a0e]">
+                      {v.aliado?.nombre ?? <span className="text-[#a8815a] italic">Venta directa</span>}
                     </span>
-                    <span className="text-sm font-bold text-[#6FB04A]">${Number(v.monto_total ?? 0).toFixed(2)}</span>
+                    <span className="text-sm font-bold text-[#4a7830]">${Number(v.monto_total ?? 0).toFixed(2)}</span>
                   </div>
                   <div className="space-y-0.5">
                     {(v.items ?? []).map(it => (
-                      <div key={it.id} className="text-xs text-[#C0D1C6] flex justify-between gap-2">
+                      <div key={it.id} className="text-xs text-[#a8815a] flex justify-between gap-2">
                         <span className="truncate">
                           {it.cantidad} × {it.producto ? `${it.producto.nombre} ${it.producto.presentacion}` : (it.descripcion ?? '—')}
                         </span>
-                        <span className="text-[#6E3F22] shrink-0">${Number(it.subtotal ?? 0).toFixed(2)}</span>
+                        <span className="text-[#a8815a] shrink-0">${Number(it.subtotal ?? 0).toFixed(2)}</span>
                       </div>
                     ))}
                   </div>
                   <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#6E3F22]/30">
-                    <span className="text-[10px] text-[#6E3F22] uppercase tracking-wider">
+                    <span className="text-[10px] text-[#a8815a] uppercase tracking-wider">
                       {v.metodo_pago ?? '—'} · costo ${Number(v.costo_total ?? 0).toFixed(2)}
                     </span>
                     <button
@@ -226,7 +226,7 @@ export default function VentasCalendario({ anio, mes, ventas, productos, aliados
 function Kpi({ label, value, color, big }: { label: string; value: string; color: string; big?: boolean }) {
   return (
     <div>
-      <div className="text-[10px] font-bold text-[#6E3F22] uppercase tracking-wider mb-0.5">{label}</div>
+      <div className="text-[10px] font-bold text-[#a8815a] uppercase tracking-wider mb-0.5">{label}</div>
       <div className={`${big ? 'text-2xl' : 'text-lg'} font-bold`} style={{ color }}>{value}</div>
     </div>
   )

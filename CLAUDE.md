@@ -38,17 +38,19 @@ app/
   layout.tsx             # root layout con fonts (Inter + Bebas Neue)
   globals.css
   crm/
-    layout.tsx           # layout con Sidebar
+    layout.tsx           # one-liner: <CrmShell>{children}</CrmShell>
     login/page.tsx       # 'use client' — export const dynamic = 'force-dynamic'
     dashboard/page.tsx   # KPIs
     aliados/
-      page.tsx           # tabla filtrable
+      page.tsx           # dos secciones: Activos (agrupados por producto_principal) + Potenciales (agrupados por producto_interes). Filtros: zona/tipo/búsqueda.
       nuevo/page.tsx
       [id]/page.tsx      # ficha del aliado
       import-wrapper.tsx
     pipeline/page.tsx    # kanban
     ruta/page.tsx        # ruta del día
+    motorizado/page.tsx  # rutas asignadas al motorizado + costo km × tarifa (query params: ?anio&mes)
     ventas/page.tsx      # calendario mensual (query params: ?anio&mes)
+    caja/page.tsx        # movimientos ingreso/egreso (auto desde ventas + manual)
     inventario/page.tsx  # 3 cards: materia prima, producto terminado, en clientes
     objetivos/page.tsx   # metas del negocio con insights de Gemini
     presencia/page.tsx   # mapa de zonas de calor de aliados
@@ -63,7 +65,9 @@ app/
     objetivos/insights/route.ts   # POST → llama Gemini con contexto de negocio
 
 components/crm/
-  sidebar.tsx            # nav lateral
+  crm-shell.tsx          # client wrapper: sidebar fija en desktop, drawer en móvil (topbar + backdrop + bloquea scroll body)
+  sidebar.tsx            # nav lateral (recibe onNavigate para cerrar el drawer al click)
+  aliados-secciones.tsx  # client: renderiza grupos colapsables de aliados por producto (default abierto si ≤10)
   aliado-form.tsx
   contacto-form.tsx
   interaccion-form.tsx
@@ -98,6 +102,8 @@ lib/
   actions/ventas.ts      # createVenta (transacción con items), deleteVenta
   actions/publicidad.ts  # createPublicidad, deletePublicidad
   actions/inventario.ts  # ajustar stock materia/producto, traslado, reducir cliente (auto-venta)
+  actions/caja.ts        # createMovimiento / deleteMovimiento (manuales; los 'venta-auto' se borran solo desde /ventas)
+  actions/motorizado.ts  # asignarRuta (desde /ruta tras optimizar) / marcarPagada (crea egreso en caja categoria='motorizado') / deleteRuta (borra también el mov de caja asociado)
   actions/objetivos.ts   # CRUD + computarProgresoTodas + generarInsights (Gemini)
   types.ts               # tipos TypeScript de las entidades
 
@@ -113,6 +119,9 @@ supabase/
     006_coquitos_de_hielo.sql    # nuevo SKU: Coquitos de Hielo (2 presentaciones)
     007_inventario.sql           # stock 3 niveles + movimientos_stock
     008_objetivos.sql            # objetivos con métricas calculadas + seeds
+    009_caja.sql                 # caja_movimientos + trigger sync_caja_venta (INSERT/UPDATE en ventas → ingreso monto_total + egreso costo_total como 'venta-auto', idempotente por venta_id)
+    010_motorizado.sql           # rutas_motorizado con costo generated (km × tarifa_usd_km, default 0.22) + snapshot jsonb + fk suave a caja_movimientos (SET NULL)
+    011_aliado_producto_interes.sql  # producto_interes_id en aliados (SKU deseado por prospectos; complementa a producto_principal_id que aplica solo en Activo)
 ```
 
 ---
@@ -173,6 +182,9 @@ Todo esto vive en memoria persistente pero listado aquí también porque es crí
 - [x] **Módulo Productos extendido** — recetas con ingredientes+proveedores, cálculo de costo estimado por unidad, bitácora de producción por SKU (tabs Datos/Precios + Receta + Bitácora). Sub-vistas para catálogo de ingredientes y proveedores.
 - [x] **Módulo Ventas** — calendario mensual (grid 7×6 con navegación mes anterior/siguiente/hoy). Click en día → panel con ventas del día + botón nueva venta. Modal con líneas por producto (auto-fill precio y costo desde catálogo), método de pago, aliado opcional. Totales del mes en sidebar (monto, costo, ganancia, ticket promedio).
 - [x] **Módulo Publicidad** — banco de assets con Supabase Storage (bucket público `publicidad`, 50 MB máx, imágenes/video/PDF). Galería con filtros por tipo/plataforma/búsqueda, upload modal (archivo o URL externa), preview modal con descarga.
+- [x] **Módulo Caja** — contabilidad simple unificada. Cada venta dispara 2 movimientos automáticos vía trigger (`ingreso` = monto_total, `egreso` = costo_total con concepto "fondo restock"). Movimientos manuales cubren gastos operativos u otros ingresos. Los `venta-auto` no se borran desde `/caja`; hay que borrar la venta en `/ventas`. Feed hacia `/objetivos` y `/dashboard` (revalidatePath).
+- [x] **Módulo Motorizado** — al optimizar ruta en `/crm/ruta` aparece botón "Asignar a motorizado" que abre modal con km ya calculados por Directions API, tarifa editable (default $0.22/km) y snapshot del orden de aliados. Rutas nacen `pendiente`; al marcar `pagada` se crea egreso manual en Caja (`categoria='motorizado'`) y se linkea vía `caja_movimiento_id`. Borrar la ruta también borra el movimiento en caja asociado.
+- [x] **Shell móvil** — `components/crm/crm-shell.tsx` envuelve el CRM: topbar solo en móvil, drawer con backdrop, bloquea scroll del body cuando está abierto, y auto-cierra al cambiar de ruta (`usePathname`).
 
 **Pendiente / futuro:**
 - [ ] Roles diferenciados en RLS (admin / vendedor / motorizado) — hoy `authenticated USING (true)` sin discriminar.

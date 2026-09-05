@@ -143,6 +143,7 @@ export interface Aliado {
   lng: number | null
   pipeline_stage_id: string | null
   producto_principal_id: string | null
+  producto_interes_id: string | null
   tiene_nevera: boolean
   notas: string | null
   activo: boolean
@@ -150,6 +151,7 @@ export interface Aliado {
   updated_at: string
   pipeline_stage?: PipelineStage
   producto_principal?: Producto | null
+  producto_interes?: Producto | null
   contactos?: Contacto[]
 }
 
@@ -267,6 +269,7 @@ export const CATEGORIAS_EGRESO = [
   'mantenimiento',
   'marketing',
   'personal',
+  'motorizado',
   'retiro-personal',
   'otro-egreso',
 ] as const
@@ -285,6 +288,7 @@ export const LABEL_CATEGORIA_CAJA: Record<CategoriaIngreso | CategoriaEgreso, st
   'mantenimiento': 'Mantenimiento',
   'marketing': 'Marketing',
   'personal': 'Personal / sueldos',
+  'motorizado': 'Motorizado',
   'retiro-personal': 'Retiro personal',
   'otro-egreso': 'Otro egreso',
 }
@@ -299,6 +303,37 @@ export interface CajaMovimiento {
   descripcion: string | null
   venta_id: string | null
   origen: CajaOrigen
+  created_at: string
+  updated_at: string
+}
+
+// ─── Motorizado ─────────────────────────────────────────────────────────────
+
+export type EstadoRutaMotorizado = 'pendiente' | 'pagada'
+
+export interface RutaMotorizadoSnapshotItem {
+  id: string
+  nombre: string
+  zona: string | null
+  direccion: string | null
+}
+
+export interface RutaMotorizado {
+  id: string
+  fecha: string
+  km: number
+  tarifa_usd_km: number
+  costo: number
+  num_paradas: number
+  duracion_segundos: number | null
+  origen_lat: number | null
+  origen_lng: number | null
+  motorizado_nombre: string | null
+  notas: string | null
+  snapshot: RutaMotorizadoSnapshotItem[] | null
+  estado: EstadoRutaMotorizado
+  pagada_at: string | null
+  caja_movimiento_id: string | null
   created_at: string
   updated_at: string
 }

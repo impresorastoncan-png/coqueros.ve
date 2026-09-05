@@ -11,6 +11,7 @@ export async function crearAliado(data: {
   direccion: string
   pipeline_stage_id: string
   producto_principal_id?: string | null
+  producto_interes_id?: string | null
   tiene_nevera: boolean
   notas: string
 }) {
@@ -18,6 +19,7 @@ export async function crearAliado(data: {
   const { error } = await supabase.from('aliados').insert({
     ...data,
     producto_principal_id: data.producto_principal_id || null,
+    producto_interes_id: data.producto_interes_id || null,
   })
   if (error) throw new Error(error.message)
   revalidatePath('/crm/aliados')
@@ -31,6 +33,7 @@ export async function actualizarAliado(id: string, data: Partial<{
   direccion: string
   pipeline_stage_id: string
   producto_principal_id: string | null
+  producto_interes_id: string | null
   tiene_nevera: boolean
   notas: string
   activo: boolean
@@ -39,6 +42,9 @@ export async function actualizarAliado(id: string, data: Partial<{
   const payload = { ...data }
   if ('producto_principal_id' in payload) {
     payload.producto_principal_id = payload.producto_principal_id || null
+  }
+  if ('producto_interes_id' in payload) {
+    payload.producto_interes_id = payload.producto_interes_id || null
   }
   const { error } = await supabase.from('aliados').update(payload).eq('id', id)
   if (error) throw new Error(error.message)

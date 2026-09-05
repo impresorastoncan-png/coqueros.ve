@@ -211,11 +211,11 @@ export default function RutaMapa({
 
   if (error) {
     return (
-      <div className="h-full flex items-center justify-center bg-[#2a1a0e] rounded-lg border border-[#ef4444]/40 p-6">
+      <div className="h-full flex items-center justify-center bg-white rounded-lg border border-[#ef4444]/40 p-6">
         <div className="text-center">
-          <p className="text-[#ef4444] text-sm font-semibold mb-2">No se pudo cargar Google Maps</p>
-          <p className="text-[#C0D1C6] text-xs">{error}</p>
-          <p className="text-[#6E3F22] text-xs mt-3">Verifica NEXT_PUBLIC_GOOGLE_MAPS_API_KEY y los permisos de la key.</p>
+          <p className="text-[#b91c1c] text-sm font-semibold mb-2">No se pudo cargar Google Maps</p>
+          <p className="text-[#6E3F22] text-xs">{error}</p>
+          <p className="text-[#a8815a] text-xs mt-3">Verifica NEXT_PUBLIC_GOOGLE_MAPS_API_KEY y los permisos de la key.</p>
         </div>
       </div>
     )
