@@ -58,8 +58,8 @@ export default async function AliadosPage({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="font-bebas text-3xl tracking-widest text-[#F5F5DC]">ALIADOS</h1>
-          <p className="text-[#C0D1C6] text-sm mt-0.5">
+          <h1 className="font-bebas text-3xl tracking-widest text-[#2a1a0e]">ALIADOS</h1>
+          <p className="text-[#6E3F22] text-sm mt-0.5">
             {activos.length} activos · {potenciales.length} potenciales
           </p>
         </div>
@@ -105,7 +105,7 @@ export default async function AliadosPage({
       </form>
 
       {aliados.length === 0 ? (
-        <div className="bg-[#2a1a0e] border border-dashed border-[#6E3F22]/40 rounded-lg p-12 text-center text-[#6E3F22]">
+        <div className="bg-white/40 backdrop-blur-sm border border-dashed border-[#D4C9B0] rounded-2xl p-12 text-center text-[#a8815a]">
           No hay aliados con los filtros aplicados.{' '}
           <Link href="/crm/aliados/nuevo" className="text-[#6FB04A] hover:underline">Crear el primero</Link>
         </div>

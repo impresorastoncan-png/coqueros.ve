@@ -32,7 +32,7 @@ export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   }
 
   return (
-    <aside className="flex flex-col w-64 min-h-screen bg-white border-r border-[#E8DFCE]">
+    <aside className="flex flex-col w-64 max-w-[85vw] min-h-screen bg-white border-r border-[#E8DFCE]">
       {/* Logo */}
       <div className="flex items-center gap-3 px-5 py-5 border-b border-[#E8DFCE]">
         {/* eslint-disable-next-line @next/next/no-img-element */}

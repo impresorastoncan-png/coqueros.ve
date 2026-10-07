@@ -116,15 +116,15 @@ export default function CajaCliente({ anio, mes, movimientos, saldoTotal, ingres
 
       {/* Tabla */}
       {filtradas.length === 0 ? (
-        <div className="bg-white border border-[#E8DFCE] rounded-lg p-12 text-center">
+        <div className="card-glass p-12 text-center">
           <div className="text-4xl mb-3">💸</div>
           <p className="text-[#a8815a] text-sm">Sin movimientos en este mes.</p>
         </div>
       ) : (
-        <div className="bg-white border border-[#E8DFCE] rounded-lg overflow-hidden">
+        <div className="card-glass overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-[#FAF7F0] text-[10px] uppercase tracking-widest text-[#a8815a]">
+              <thead className="bg-white/40 text-[10px] uppercase tracking-widest text-[#a8815a]">
                 <tr>
                   <th className="text-left px-4 py-3">Fecha</th>
                   <th className="text-left px-4 py-3">Tipo</th>
@@ -152,7 +152,7 @@ export default function CajaCliente({ anio, mes, movimientos, saldoTotal, ingres
 
 function Kpi({ title, subtitle, value, color, icon }: { title: string; subtitle: string; value: number; color: string; icon: string }) {
   return (
-    <div className="bg-white border border-[#E8DFCE] rounded-lg p-5">
+    <div className="card-glass p-5">
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs font-semibold text-[#a8815a] uppercase tracking-wider">{title}</span>
         <span className="text-xl">{icon}</span>
@@ -284,8 +284,8 @@ function NuevoMovimientoModal({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
-      <div className="bg-white border border-[#D4C9B0] rounded-lg max-w-lg w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
+      <div className="card-glass max-w-lg w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8DFCE]">
           <h2 className="font-bebas text-lg tracking-widest text-[#2a1a0e]">Nuevo movimiento</h2>
           <button onClick={onClose} aria-label="Cerrar" className="text-[#a8815a] hover:text-[#2a1a0e] text-2xl leading-none w-8 h-8">×</button>

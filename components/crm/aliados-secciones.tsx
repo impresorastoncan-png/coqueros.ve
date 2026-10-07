@@ -59,7 +59,7 @@ function Seccion({
   return (
     <section>
       <div className="flex items-baseline gap-3 mb-3">
-        <h2 className="font-bebas text-xl tracking-widest text-[#F5F5DC]">
+        <h2 className="font-bebas text-xl tracking-widest text-[#2a1a0e]">
           {icono} {titulo.toUpperCase()}
         </h2>
         <span
@@ -71,7 +71,7 @@ function Seccion({
       </div>
 
       {grupos.length === 0 ? (
-        <div className="bg-[#2a1a0e] border border-dashed border-[#6E3F22]/40 rounded-lg p-6 text-center text-[#6E3F22] text-sm">
+        <div className="bg-white/40 backdrop-blur-sm border border-dashed border-[#D4C9B0] rounded-2xl p-6 text-center text-[#a8815a] text-sm">
           {vacio}
         </div>
       ) : (
@@ -96,11 +96,11 @@ function GrupoCard({
   const sinDefinir = grupo.productoId === null
 
   return (
-    <div className="bg-[#2a1a0e] border border-[#6E3F22]/40 rounded-lg overflow-hidden">
+    <div className="card-glass-dark overflow-hidden">
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center justify-between px-4 py-3 hover:bg-[#6FB04A]/5 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-[#6FB04A]/10 transition-colors"
       >
         <div className="flex items-center gap-3">
           <span className="text-lg">{sinDefinir ? '⚪' : '🥥'}</span>

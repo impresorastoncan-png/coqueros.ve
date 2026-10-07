@@ -103,8 +103,8 @@ export default function VentaFormModal({ fecha, productos, aliados, onClose, onS
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/40 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="bg-white border border-[#D4C9B0] rounded-lg w-full max-w-2xl my-8 shadow-2xl">
+    <div className="fixed inset-0 z-[60] flex items-start sm:items-center justify-center bg-black/40 backdrop-blur-sm p-4 overflow-y-auto">
+      <div className="card-glass w-full max-w-2xl my-8">
         <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8DFCE]">
           <div>
             <h2 className="font-bebas text-xl tracking-widest text-[#2a1a0e]">NUEVA VENTA</h2>

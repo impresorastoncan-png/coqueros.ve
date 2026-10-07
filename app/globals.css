@@ -30,6 +30,22 @@ html, body {
   color: var(--coq-text);
 }
 
+/* ─── Glass morphism cards ──────────────────────────────────────────────────── */
+@layer components {
+  /* Card glass para fondos claros (crema). Usar sobre bg-coq-bg o gradiente. */
+  .card-glass {
+    @apply bg-white/60 backdrop-blur-md border border-white/50 shadow-lg rounded-2xl;
+  }
+  /* Card glass para zonas oscuras (kanban, agrupaciones de aliados). */
+  .card-glass-dark {
+    @apply bg-[#2a1a0e]/70 backdrop-blur-md border border-[#6FB04A]/25 shadow-lg rounded-2xl;
+  }
+  /* Variante compacta — menos blur, menos sombra, radio menor. */
+  .card-glass-sm {
+    @apply bg-white/55 backdrop-blur-sm border border-white/40 shadow-sm rounded-lg;
+  }
+}
+
 /* ─── Print styles para exportar ruta a PDF ─────────────────────────────────── */
 @media print {
   @page { size: A4; margin: 15mm; }

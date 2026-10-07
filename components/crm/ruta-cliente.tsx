@@ -112,7 +112,7 @@ export default function RutaCliente({
 
       {/* Toolbar */}
       <div className="print:hidden flex flex-wrap items-center gap-3 mb-4">
-        <div className="flex bg-white border border-[#E8DFCE] rounded-lg p-1 gap-1">
+        <div className="flex card-glass rounded-lg p-1 gap-1">
           <button
             onClick={() => setVista('lista')}
             className={`px-3 py-1.5 rounded text-xs font-semibold transition-colors ${vista === 'lista' ? 'bg-[#6FB04A] text-white' : 'text-[#a8815a] hover:text-white'}`}
@@ -153,7 +153,7 @@ export default function RutaCliente({
       </div>
 
       {/* Panel de planificación */}
-      <div className="print:hidden bg-white border border-[#E8DFCE] rounded-lg p-4 mb-4">
+      <div className="print:hidden card-glass p-4 mb-4">
         <div className="flex items-center justify-between flex-wrap gap-3 mb-3">
           <div>
             <h3 className="font-bebas text-sm tracking-widest text-[#2a1a0e]">🧭 PLANIFICACIÓN DE RUTA</h3>
@@ -337,7 +337,7 @@ function AliadoCard({
     : null
 
   return (
-    <div className={`bg-white border rounded-xl p-4 transition-colors ${visitado ? 'border-[#6FB04A]/40 opacity-70' : 'border-[#E8DFCE] hover:border-[#D4C9B0]'}`}>
+    <div className={`card-glass p-4 transition-colors ${visitado ? 'border-[#6FB04A]/40 opacity-70' : 'hover:border-white/70'}`}>
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
@@ -523,9 +523,9 @@ function AsignarMotorizadoModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
       <div
-        className="bg-white rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto"
+        className="card-glass max-w-md w-full p-6 max-h-[90vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">

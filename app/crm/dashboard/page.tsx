@@ -59,7 +59,7 @@ export default async function DashboardPage() {
           { label: 'En pipeline',       value: enPipeline ?? 0,     icon: '📋', color: '#FDC829', href: '/crm/pipeline' },
           { label: 'Interacciones hoy', value: (ultimasInteracciones ?? []).filter(i => new Date(i.fecha).toDateString() === new Date().toDateString()).length, icon: '🗺️', color: '#a8815a', href: '/crm/aliados' },
         ].map(card => (
-          <Link key={card.label} href={card.href} className="bg-white border border-[#E8DFCE] rounded-lg p-4 sm:p-5 hover:border-[#D4C9B0] hover:shadow-sm transition-all group">
+          <Link key={card.label} href={card.href} className="card-glass p-4 sm:p-5 hover:border-white/70 hover:shadow-xl transition-all group">
             <div className="flex items-center justify-between mb-2 sm:mb-3">
               <span className="text-[10px] sm:text-xs font-semibold text-[#6E3F22] uppercase tracking-wider">{card.label}</span>
               <span className="text-lg sm:text-xl">{card.icon}</span>
@@ -71,7 +71,7 @@ export default async function DashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Distribución por etapa */}
-        <div className="bg-white border border-[#E8DFCE] rounded-lg p-4 sm:p-5">
+        <div className="card-glass p-4 sm:p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bebas text-lg tracking-widest text-[#2a1a0e]">POR ETAPA</h2>
             <Link href="/crm/pipeline" className="text-xs text-[#4a7830] hover:underline">Ver kanban →</Link>
@@ -92,7 +92,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Últimas interacciones */}
-        <div className="bg-white border border-[#E8DFCE] rounded-lg p-4 sm:p-5">
+        <div className="card-glass p-4 sm:p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bebas text-lg tracking-widest text-[#2a1a0e]">ÚLTIMA ACTIVIDAD</h2>
             <Link href="/crm/aliados" className="text-xs text-[#4a7830] hover:underline">Ver aliados →</Link>

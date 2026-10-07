@@ -29,7 +29,7 @@ export default function KanbanBoard({ initialAliados, stages }: { initialAliados
         {stages.map(stage => {
           const cards = getByStage(stage.id)
           return (
-            <div key={stage.id} className="shrink-0 w-64">
+            <div key={stage.id} className="shrink-0 w-[85vw] sm:w-64">
               {/* Column header */}
               <div className="flex items-center justify-between mb-3 px-1">
                 <div className="flex items-center gap-2">

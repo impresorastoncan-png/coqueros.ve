@@ -82,9 +82,9 @@ export default function VentasCalendario({ anio, mes, ventas, productos, aliados
           </div>
         </div>
 
-        <div className="bg-white border border-[#E8DFCE] rounded-lg overflow-hidden">
+        <div className="card-glass overflow-hidden">
           {/* Header días */}
-          <div className="grid grid-cols-7 border-b border-[#E8DFCE] bg-[#FAF7F0]/50">
+          <div className="grid grid-cols-7 border-b border-white/40 bg-white/30">
             {DIAS.map(d => (
               <div key={d} className="text-center text-[10px] font-bold text-[#a8815a] uppercase tracking-widest py-2">
                 {d}
@@ -94,7 +94,7 @@ export default function VentasCalendario({ anio, mes, ventas, productos, aliados
           {/* Grid */}
           <div className="grid grid-cols-7">
             {grid.map((cell, idx) => {
-              if (!cell) return <div key={idx} className="min-h-[64px] sm:min-h-[92px] border-r border-b border-[#E8DFCE]/60 bg-[#FAF7F0]/30" />
+              if (!cell) return <div key={idx} className="min-h-[72px] sm:min-h-[92px] border-r border-b border-white/30 bg-white/10" />
               const fechaIso = `${anio}-${String(mes).padStart(2, '0')}-${String(cell).padStart(2, '0')}`
               const ventasDia = ventasPorDia.get(fechaIso) ?? []
               const montoDia = ventasDia.reduce((a, v) => a + Number(v.monto_total ?? 0), 0)
@@ -105,8 +105,8 @@ export default function VentasCalendario({ anio, mes, ventas, productos, aliados
                 <button
                   key={idx}
                   onClick={() => setDiaSeleccionado(fechaIso)}
-                  className={`min-h-[64px] sm:min-h-[92px] border-r border-b border-[#E8DFCE]/60 p-2 text-left transition-colors relative group ${
-                    activo ? 'bg-[#6FB04A]/15 ring-1 ring-inset ring-[#6FB04A]/50' : 'hover:bg-[#6FB04A]/5'
+                  className={`min-h-[72px] sm:min-h-[92px] border-r border-b border-white/30 p-2 text-left transition-colors relative group ${
+                    activo ? 'bg-[#6FB04A]/20 ring-1 ring-inset ring-[#6FB04A]/50' : 'hover:bg-[#6FB04A]/10'
                   }`}
                 >
                   <div className="flex items-start justify-between mb-1">
@@ -130,7 +130,7 @@ export default function VentasCalendario({ anio, mes, ventas, productos, aliados
       {/* Panel lateral */}
       <div className="lg:col-span-1 space-y-4">
         {/* Totales del mes */}
-        <div className="bg-white border border-[#E8DFCE] rounded-lg p-5">
+        <div className="card-glass p-5">
           <h3 className="font-bebas text-lg tracking-widest text-[#2a1a0e] mb-4">TOTALES DEL MES</h3>
           <div className="space-y-3">
             <Kpi label="Ventas" value={`$${totales.monto.toFixed(2)}`} color="#6FB04A" />
@@ -152,7 +152,7 @@ export default function VentasCalendario({ anio, mes, ventas, productos, aliados
         </div>
 
         {/* Día seleccionado */}
-        <div className="bg-white border border-[#E8DFCE] rounded-lg p-5">
+        <div className="card-glass p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-bebas text-lg tracking-widest text-[#2a1a0e]">
               {diaSeleccionado ? formatoFecha(diaSeleccionado) : 'Elige un día'}

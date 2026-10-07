@@ -16,7 +16,7 @@ export default function ImportHelp() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-10 z-50 w-[420px] bg-[#1a1007] border border-[#FDC829]/30 rounded-lg shadow-2xl shadow-black/60 p-5">
+        <div className="absolute right-0 top-10 z-50 w-[calc(100vw-2rem)] max-w-[420px] bg-[#1a1007] border border-[#FDC829]/30 rounded-lg shadow-2xl shadow-black/60 p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bebas tracking-widest text-[#FDC829] text-base">FORMATO DE IMPORTACIÓN EXCEL</h3>
             <button onClick={() => setOpen(false)} className="text-[#6E3F22] hover:text-[#C0D1C6] text-sm transition-colors">✕</button>

@@ -19,13 +19,13 @@ export default function CrmShell({ children }: { children: React.ReactNode }) {
   }, [open])
 
   return (
-    <div className="flex min-h-screen bg-[#FAF7F0] font-sans">
+    <div className="flex min-h-screen bg-gradient-to-br from-[#FAF7F0] via-[#FAF7F0] to-[#F5F5DC]/50 font-sans">
       {/* Topbar solo en móvil */}
       <div className="lg:hidden fixed top-0 inset-x-0 z-30 flex items-center gap-3 h-14 px-4 bg-white border-b border-[#E8DFCE]">
         <button
           onClick={() => setOpen(true)}
           aria-label="Abrir menú"
-          className="w-9 h-9 flex items-center justify-center rounded-md text-[#2a1a0e] hover:bg-black/5 active:bg-black/10"
+          className="w-11 h-11 flex items-center justify-center rounded-md text-[#2a1a0e] hover:bg-black/5 active:bg-black/10"
         >
           <span className="block w-5 h-0.5 bg-current relative before:content-[''] before:block before:absolute before:-top-1.5 before:w-5 before:h-0.5 before:bg-current after:content-[''] after:block after:absolute after:top-1.5 after:w-5 after:h-0.5 after:bg-current" />
         </button>

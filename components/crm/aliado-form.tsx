@@ -83,7 +83,7 @@ export default function AliadoForm({
       </div>
 
       {/* Tipo + Zona */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-xs font-semibold text-[#C0D1C6] uppercase tracking-wider mb-1.5">Tipo *</label>
           <select
@@ -124,7 +124,7 @@ export default function AliadoForm({
         <label className="block text-xs font-semibold text-[#C0D1C6] uppercase tracking-wider mb-1.5">
           Coordenadas GPS <span className="text-[#6E3F22] normal-case font-normal">(para el mapa de ruta)</span>
         </label>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <input
             value={form.lat}
             onChange={e => set('lat', e.target.value)}
@@ -144,7 +144,7 @@ export default function AliadoForm({
       </div>
 
       {/* Stage + Nevera */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-xs font-semibold text-[#C0D1C6] uppercase tracking-wider mb-1.5">Etapa del pipeline</label>
           <select
