@@ -1,6 +1,8 @@
-# CLAUDE.md — Coqueros CRM
+# CLAUDE.md
 
-Contexto persistente para retomar el proyecto en sesiones nuevas. Léelo primero antes de tocar código.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+> Coqueros CRM — contexto persistente para retomar el proyecto en sesiones nuevas. Léelo primero antes de tocar código.
 
 ---
 
@@ -26,7 +28,7 @@ El documento canónico de negocio y roadmap está en `master_prompt_crm_coqueros
 - **Gemini API** (Google AI Studio) — para asesoría en `/objetivos`. Key en `GEMINI_API_KEY`. Modelo actual `gemini-2.5-flash`.
 - **@hello-pangea/dnd** — drag & drop del kanban del pipeline
 - **xlsx (SheetJS)** — import/export Excel
-- **Leaflet + react-leaflet** — deps residuales del mapa anterior de `/ruta`. Ya no se usan; se pueden desinstalar cuando se limpie.
+- **Leaflet + react-leaflet** — deps residuales del mapa anterior de `/ruta`. **Sin imports en código** (confirmado con grep); seguros de eliminar con `npm uninstall leaflet react-leaflet @types/leaflet` en el próximo housekeeping.
 
 ---
 
@@ -39,6 +41,7 @@ app/
   globals.css
   crm/
     layout.tsx           # one-liner: <CrmShell>{children}</CrmShell>
+    page.tsx             # redirect('/crm/dashboard')
     login/page.tsx       # 'use client' — export const dynamic = 'force-dynamic'
     dashboard/page.tsx   # KPIs
     aliados/
@@ -211,7 +214,10 @@ Todo esto vive en memoria persistente pero listado aquí también porque es crí
 ```powershell
 npm run dev                                    # local dev en :3000
 npm run build                                  # verificar que compila antes de push
+npm run lint                                   # ESLint — correrlo antes de PRs grandes (build no falla por lint-only)
 npm run db:push                                # aplicar migraciones nuevas a Supabase
+npm run db:diff                                # generar nueva migración desde cambios locales vs remoto
+npm run db:reset                               # reset total de la DB local (destructivo — pide confirmación)
 npx vercel --prod --scope josephs-projects-6f38454c   # deploy manual a producción
 npx vercel logs <deployment-url> --follow      # ver logs runtime
 ```
